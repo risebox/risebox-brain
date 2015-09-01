@@ -19,10 +19,11 @@ The brain of the Risebox
 ssh 192.x.x.x -l root
 ```
 
-  by default no home for root user, so create one :
+  by default no home for root user, so create one and assign it to RISEBOX_HOME var:
 ```
 cd /home
 sudo mkdir risebox
+export RISEBOX_HOME=/home/risebox
 ```
 
 1. Network
