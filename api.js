@@ -1,14 +1,12 @@
 var querystring = require('querystring'),
     https = require('https');
 
-var sendMeasure = function (metricKey, value){
-  var postData = querystring.stringify({
-    'value' : value
-  });
+function post(path, data){
+  postData = querystring.stringify(data);
   
-  var options = {
+  options = {
     hostname: 'rbdev-api.herokuapp.com',
-    path: '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/measures',
+    path: path,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -16,7 +14,7 @@ var sendMeasure = function (metricKey, value){
     }
   };
   
-  var req = https.request(options, function(res) {
+  req = https.request(options, function(res) {
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
@@ -29,9 +27,17 @@ var sendMeasure = function (metricKey, value){
     console.log('problem with request: ' + e.message);
   });
   
-  // write data to request body
   req.write(postData);
   req.end();
+
 }
+
+
+var sendMeasure = function (metricKey, value){
+  formData = { 'value' : value };
+  path = '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/measures';
+  post(path, formData);
+}
+ 
 
 module.exports.sendMeasure = sendMeasure;
