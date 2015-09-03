@@ -36,7 +36,6 @@ var sendAirTempAndHumMeasure = function (){
 
 var watchUpperWaterLevel = function(){
   upperWaterLevelProbe.watchCycle(function(cycleTime){
-    console.log('computed duration: ' + cycleTime);
     api.sendMeasure('UCYC', cycleTime);
   });
 }
@@ -47,7 +46,20 @@ var watchLowerWaterLevel = function(){
   });
 }
 
+var checkWaterCycleDurations = function(){
+  upperWaterLevelProbe.checkCycleDuration(function(cycleTime, description){
+    console.log('sending alert for UPPER waterLevel: cycle time ' + cycleTime + ' is not OK');
+    api.sendAlert('UCYC', cycleTime, description);
+  });
+  /*lowerWaterLevelProbe.checkCycleDuration(function(cycleTime){
+     //api.sendAlert('LCYC', cycleTime);
+  });*/
+}
+
+
+
 module.exports.sendWaterTempMeasure = sendWaterTempMeasure;
 module.exports.sendAirTempAndHumMeasure = sendAirTempAndHumMeasure;
 module.exports.watchUpperWaterLevel = watchUpperWaterLevel;
 module.exports.watchLowerWaterLevel = watchLowerWaterLevel;
+module.exports.checkWaterCycleDurations = checkWaterCycleDurations;

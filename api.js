@@ -32,10 +32,15 @@ function post(path, data){
 
 }
 
-
 var sendMeasure = function (metricKey, value){
   formData = { 'value' : value };
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/measures';
+  post(path, formData);
+}
+
+var sendAlert = function (metricKey, value, description){
+  formData = { 'value' : value, 'description' : description };
+  path = '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/alerts';
   post(path, formData);
 }
  

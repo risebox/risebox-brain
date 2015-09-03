@@ -8,3 +8,4 @@ setInterval(box.sendAirTempAndHumMeasure, 1000);*/
 
 box.watchUpperWaterLevel();
 box.watchLowerWaterLevel();
+setInterval(box.checkWaterCycleDurations, 1000);
