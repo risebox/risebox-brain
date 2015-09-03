@@ -1,5 +1,6 @@
 var api = require(apiPath()),
     wtempProbe = require(sensorPath('ds18b20'));
+    airProbe   = require(sensorPath('dht22'));
 
 function sensorPath(sensorName){
   if (process.env.MOCK_SENSORS === 'true') {
@@ -23,4 +24,12 @@ var sendWaterTempMeasure = function (){
   });
 }
 
+var sendAirTempAndHumMeasure = function (){
+  airProbe.getAirTempAndHum(function(value){
+    api.sendMeasure('ATEMP', value.temp);
+    api.sendMeasure('AHUM', value.hum);
+  });
+}
+
 module.exports.sendWaterTempMeasure = sendWaterTempMeasure;
+module.exports.sendAirTempAndHumMeasure = sendAirTempAndHumMeasure;
