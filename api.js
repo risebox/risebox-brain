@@ -46,3 +46,4 @@ var sendAlert = function (metricKey, value, description){
  
 
 module.exports.sendMeasure = sendMeasure;
+module.exports.sendAlert   = sendAlert;

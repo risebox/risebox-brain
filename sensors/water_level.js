@@ -10,6 +10,10 @@ var WaterLevelProbe = function(position, pin){
     return (value == 0 ? 'down' : 'up')
   }
   
+  this.lastFlushTime = function() {
+    return this.lastLevels['down'];
+  }
+  
   this.watchCycle = function(callback){
     if (this.pin == null) return;
     
@@ -24,7 +28,7 @@ var WaterLevelProbe = function(position, pin){
         if (x.value === 0 || x.value === 1){
           console.log('Value changed at ' + that.position + " level");
           that.computeLevelChange(x.value, function(duration){
-            callback(duration);
+            callback(duration, that.direction(x.value));
           });
         }
       }

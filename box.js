@@ -1,9 +1,13 @@
+var dimensions = {'width': 110, 'depth': 50, 'probeHeight': 45};
+
 var api = require(apiPath()),
     wtempProbe = require(sensorPath('ds18b20')),
     airProbe   = require(sensorPath('dht22')),
     WaterLevelProbe   = require(sensorPath('water_level')),
     upperWaterLevelProbe   = new WaterLevelProbe('UPPER', 'P8_7'),
-    lowerWaterLevelProbe   = new WaterLevelProbe('LOWER', null);
+    lowerWaterLevelProbe   = new WaterLevelProbe('LOWER', null),
+    WaterVolumeProbe   = require(sensorPath('hc-sr04')),
+    waterVolumeProbe = new WaterVolumeProbe(dimensions);
 
 function sensorPath(sensorName){
   if (process.env.MOCK_SENSORS === 'true') {
@@ -35,15 +39,34 @@ var sendAirTempAndHumMeasure = function (){
 }
 
 var watchUpperWaterLevel = function(){
-  upperWaterLevelProbe.watchCycle(function(cycleTime){
+  upperWaterLevelProbe.watchCycle(function(cycleTime, direction){
+    if (direction == 'down'){
+      now = parseInt(Date.now()/1000);
+      lastLowerFlush = lowerWaterLevelProbe.lastFlushTime();
+      if (now - lastLowerFlush < 60){
+        waterVolumeProbe.getVolume(function(volume){
+          api.sendMeasure('WVOL', volume);
+        });
+      }
+    }
     api.sendMeasure('UCYC', cycleTime);
   });
 }
 
 var watchLowerWaterLevel = function(){
-  lowerWaterLevelProbe.watchCycle(function(cycleTime){
-    //api.sendMeasure('LCYC', cycleTime);
+  lowerWaterLevelProbe.watchCycle(function(cycleTime, direction){
+    if (direction == 'down'){
+      now = parseInt(Date.now()/1000);
+      lastUpperFlush = upperWaterLevelProbe.lastFlushTime();
+      if (now - lastUpperFlush < 60){
+        waterVolumeProbe.getVolume(function(volume){
+          api.sendMeasure('WVOL', volume);
+        });
+      }
+    }
+    api.sendMeasure('LCYC', cycleTime);
   });
+
 }
 
 var checkWaterCycleDurations = function(){
@@ -55,6 +78,8 @@ var checkWaterCycleDurations = function(){
      //api.sendAlert('LCYC', cycleTime);
   });*/
 }
+
+var check
 
 
 
