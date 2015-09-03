@@ -36,7 +36,7 @@ var sendAirTempAndHumMeasure = function (){
 
 var watchUpperWaterLevel = function(){
   upperWaterLevelProbe.watchCycle(function(cycleTime){
-    console.log('changed status: ' + cycleTime);
+    console.log('computed duration: ' + cycleTime);
     //api.sendMeasure('UCYC', cycleTime);
   });
 }

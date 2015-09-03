@@ -3,6 +3,19 @@ var b = require('bonescript');
 var WaterLevelProbe = function(position, pin){
   this.position = position;
   this.pin = pin;
+  this.lastLevels = {};
+  
+  this.direction = function(value){
+    return (value == 0 ? 'down' : 'up')
+  }
+  
+  this.isFlooding = function(){
+    
+  }
+  
+  this.isDraining = function(){
+    
+  }
 
   this.watchCycle = function(callback){
     if (this.pin == null) return;
@@ -17,12 +30,31 @@ var WaterLevelProbe = function(position, pin){
       } else {
         if (x.value === 0 || x.value === 1){
           console.log('Value changed at ' + that.position + " level");
-          callback(x.value);
+          that.computeLevelChange(x.value, function(duration){
+            callback(duration);
+          });
         }
       }
     };
 
     b.attachInterrupt(this.pin, true, b.CHANGE, handleInterrupt);
+  }
+  
+  this.computeLevelChange = function(levelValue, callback){
+    direction = this.direction(levelValue);
+    now      = Date.now();
+    lastTime = this.lastLevels[direction];
+    
+    if (lastTime != null){
+      duration = now - lastTime;
+      callback(duration);
+    }
+    else {
+      duration = null; 
+      console.log('Last timing water going ' + direction + ' not available : can\'t compute daration');
+    }
+    
+    this.lastLevels[direction] = now;
   }
   
   this.stopWatching = function(){
