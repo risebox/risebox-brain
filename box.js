@@ -79,10 +79,6 @@ var checkWaterCycleDurations = function(){
   });*/
 }
 
-var check
-
-
-
 module.exports.sendWaterTempMeasure = sendWaterTempMeasure;
 module.exports.sendAirTempAndHumMeasure = sendAirTempAndHumMeasure;
 module.exports.watchUpperWaterLevel = watchUpperWaterLevel;
