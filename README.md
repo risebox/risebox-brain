@@ -156,14 +156,17 @@ b.analogWrite('P9_16', 0.1, 2000, printJSON);
 function printJSON(x) { console.log(JSON.stringify(x)); }
 
 Le fait de lancer le script JS charge les overlays BSPWM sur les pins utilisée (ici P9_14 et P9_16) suivants dans le capemanager 
-
+```
 8: ff:P-O-L Override Board Name,00A0,Override Manuf,bspwm_P9_14_6
 9: ff:P-O-L Override Board Name,00A0,Override Manuf,bspwm_P9_16_6
+```
 
 Dans __/sys/devices/ocp.x/bspwm_test_P9_16.yy__ on trouve :
 le fichier polarity qui doit être à 0.
 le fichier period qui est par défaut à 500 000 (unité est nanoseconde)
 le fichier duty (la durée des impulsions entre 0 et 500 000. 0 tout le temps étient et 500 000 tout le temps allumé).
+
+NB : Si on teste au moyen de l'interface web beagleboard.org, attention, il faut supprimer la line qui appelle pinMode, et rebooter apres avoir changé polarity.
 
 7. SN-HC-SR04 Ultrasonic Distance Sensor
 
