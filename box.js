@@ -1,4 +1,9 @@
+var events = require('events');
+
 var dimensions = {'width': 110, 'depth': 50, 'probeHeight': 45};
+var settings   = {};
+var settingsNotifier = new events.EventEmitter();
+
 
 var api = require(apiPath()),
     wtempProbe = require(sensorPath('ds18b20')),
@@ -7,7 +12,9 @@ var api = require(apiPath()),
     upperWaterLevelProbe   = new WaterLevelProbe('UPPER', 'P8_7'),
     lowerWaterLevelProbe   = new WaterLevelProbe('LOWER', null),
     WaterVolumeProbe   = require(sensorPath('hc-sr04')),
-    waterVolumeProbe = new WaterVolumeProbe(dimensions);
+    waterVolumeProbe = new WaterVolumeProbe(dimensions),
+    PHProbe = require(sensorPath('ph-meter-pro')),
+    phProbe = new PHProbe('P9_36');
 
 function sensorPath(sensorName){
   if (process.env.MOCK_SENSORS === 'true') {
@@ -79,8 +86,43 @@ var checkWaterCycleDurations = function(){
   });*/
 }
 
+var sendPHMeasure = function() {
+  phProbe.getPH(function(phValue) {
+    api.sendMeasure('PH', phValue);
+  });
+}
+
+var loadDeviceSettings = function(){
+  function addToSettings(element, index, array) {
+      settings[element.key] = element.value;
+    }
+    
+  function watchAndUpdateSettings(){
+    api.getDeltaSettings(function(result){
+      if(result.result.length > 0) {
+        result.result.forEach(addToSettings);
+        settingsNotifier.emit('settingsUpdate');
+      }
+    });
+  }
+  api.getAllSettings(function(result){
+    result.result.forEach(addToSettings);
+    settingsNotifier.emit('settingsUpdate');
+    setInterval(watchAndUpdateSettings, 5000);
+  });
+}
+
+var initLightingSystem = function(){
+  settingsNotifier.on('settingsUpdate', function(){
+    console.log('something was updated, lets recompute all lights to be sure !');
+  });
+}
+
 module.exports.sendWaterTempMeasure = sendWaterTempMeasure;
 module.exports.sendAirTempAndHumMeasure = sendAirTempAndHumMeasure;
 module.exports.watchUpperWaterLevel = watchUpperWaterLevel;
 module.exports.watchLowerWaterLevel = watchLowerWaterLevel;
 module.exports.checkWaterCycleDurations = checkWaterCycleDurations;
+module.exports.sendPHMeasure = sendPHMeasure;
+module.exports.loadDeviceSettings = loadDeviceSettings;
+module.exports.initLightingSystem = initLightingSystem;
