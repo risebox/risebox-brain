@@ -6,7 +6,7 @@ function init(callback) {
   if (process.env.MOCK_SENSORS != true){
     ensureOverlayLoaded('BB-W1', function(){
       ensureOverlayLoaded('hcsr04', function(){
-        callback();
+          callback();
       });  
     });
   }

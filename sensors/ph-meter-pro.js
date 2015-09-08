@@ -6,7 +6,7 @@ var PHProbe = function(pin){
   
   this.getPH = function(callback) {
     console.log('this.pin' + this.pin)
-    that = this
+    var that = this
     b.analogRead(this.pin, function(x){
       callback(that.normalizePH(parseFloat(x.value)));
     });

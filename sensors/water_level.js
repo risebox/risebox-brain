@@ -19,7 +19,7 @@ var WaterLevelProbe = function(position, pin){
     
     b.pinMode(this.pin, b.INPUT);
     console.log('I\'m watching ' + this.position + " level" + " on pin " + this.pin);
-    that = this;
+    var that = this;
     
     var handleInterrupt = function(x){
       if (x.attached){
