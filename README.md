@@ -5,6 +5,7 @@ The brain of the Risebox
 - [Installation](#install)
 - [Board wiring](#wiring)
 - [Extras](#extras)
+- [Run](#run)
 
 ##<a name="install"></a> Installation
 0. SSH access to the board
@@ -244,3 +245,13 @@ Pour vérifier que le HDMI est bien désactivé, faire un __cat /sys/devices/bon
  7: ff:P-O-L Override Board Name,00A0,Override Manuf,BB-W1
  8: ff:P-O-L Override Board Name,00A0,Override Manuf,cape-bone-iio
 ```
+
+##<a name="run"></a>Run
+
+To run the brain program, use __start.sh__ script
+
+```bash
+cd /var/lib/cloud9/risebox-brain
+./start.sh
+```
+
