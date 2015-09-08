@@ -1,6 +1,6 @@
 var fs = require('fs');
 var dimensions = {'width': 110, 'depth': 50, 'probeHeight': 45};
-var settingsFile = './settings/current-settings.json';
+var settingsFile = path('/settings/current-settings.json');
 var settings   = require(settingsFile);
 
 
@@ -25,9 +25,9 @@ function sensorPath(sensorName){
 
 function apiPath(){
   if (process.env.MOCK_API === 'true') {
-    return './api_mock'
+    return './api/api_mock'
   } else {
-    return './api'
+    return './api/api'
   }
 }
 

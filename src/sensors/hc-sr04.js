@@ -2,7 +2,7 @@ var b    = require('bonescript'),
     exec = require('child_process').exec;
 
 var WaterVolumeProbe = function(dimensions){
-  var probeScript = './hcr.sh';
+  var probeScript = './lib/hcr.sh';
   this.dimensions = dimensions
   
   function averageDistance(sensorOutput) {

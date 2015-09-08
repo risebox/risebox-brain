@@ -27,4 +27,4 @@ checkAndLoadOverlay "hcsr04"
 
 initSettingsFile
 
-node main.js
+node src/main.js

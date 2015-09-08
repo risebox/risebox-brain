@@ -1,5 +1,9 @@
 var env = require('node-env-file');
-env(__dirname + '/.env');
+env('.env');
+
+path = function(pathString) {
+  return process.cwd() + pathString;
+}
 
 var box      = require('./box');
 
