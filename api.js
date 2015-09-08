@@ -42,7 +42,7 @@ function post(path, data){
 
 }
 
-function get(path, data, success){
+function get(path, data, success, error){
   qs = querystring.stringify(data);
   
   options = {
@@ -78,6 +78,7 @@ function get(path, data, success){
   
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
+    error(e);
   });
   
   req.end();
@@ -97,14 +98,14 @@ var sendAlert = function (metricKey, value, description){
   post(path, formData);
 }
 
-var getAllSettings = function (callback) {
+var getAllSettings = function (success, error) {
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
-  get(path, { 'mode' : 'full' }, callback);
+  get(path, { 'mode' : 'full' }, success, error);
 }
  
-var getDeltaSettings = function (callback) {
+var getDeltaSettings = function (success, error) {
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
-  get(path, { 'mode' : 'delta' }, callback);
+  get(path, { 'mode' : 'delta' }, success, error);
 }
 
 

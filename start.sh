@@ -10,10 +10,21 @@ checkAndLoadOverlay() {
   fi
 }
 
+initSettingsFile() {
+  if [[ -n $(ls settings | grep current-settings) ]]; then
+    echo "Keeping existing settings file"
+  else
+    cp settings/default-settings.json settings/current-settings.json
+    echo "Initialized a new settings file"
+  fi
+}
+
 checkAndLoadOverlay "cape-bone-iio"
 
 checkAndLoadOverlay "BB-W1"
 
 checkAndLoadOverlay "hcsr04"
+
+initSettingsFile
 
 node main.js

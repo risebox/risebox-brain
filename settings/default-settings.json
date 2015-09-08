@@ -1,0 +1,10 @@
+{
+  "upper_white": 0,
+  "lower_white": 0,
+  "all_white_until": "1970-01-01T00:00:00.000+00:00",
+  "silent_until": "1970-01-01T00:00:00.000+00:00",
+  "upper_blue": 50,
+  "lower_red": 50,
+  "upper_red": 50,
+  "lower_blue": 50
+}

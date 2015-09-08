@@ -1,8 +1,7 @@
-var events = require('events');
-
+var fs = require('fs');
 var dimensions = {'width': 110, 'depth': 50, 'probeHeight': 45};
-var settings   = {};
-var settingsNotifier = new events.EventEmitter();
+var settingsFile = './settings/current-settings.json';
+var settings   = require(settingsFile);
 
 
 var api = require(apiPath()),
@@ -99,23 +98,34 @@ var loadDeviceSettings = function(){
     
   function watchAndUpdateSettings(){
     api.getDeltaSettings(function(result){
-      if(result.result.length > 0) {
-        result.result.forEach(addToSettings);
-        settingsNotifier.emit('settingsUpdate');
-      }
+      if(result.result.length > 0) { 
+        updateSettings(result.result);
+        // appeler la methode de traduction de settings en ordres
+        }
     });
   }
-  api.getAllSettings(function(result){
-    result.result.forEach(addToSettings);
-    settingsNotifier.emit('settingsUpdate');
+  
+  function processFullUpdate(result){
+    updateSettings(result.result)
+    // appeler la methode de traduction de settings en ordres
     setInterval(watchAndUpdateSettings, 5000);
-  });
-}
-
-var initLightingSystem = function(){
-  settingsNotifier.on('settingsUpdate', function(){
-    console.log('something was updated, lets recompute all lights to be sure !');
-  });
+  }
+  
+  function askFullUpdateAgain(error){
+    setTimeout(function(){api.getAllSettings(processFullUpdate, askFullUpdateAgain)}, 5000)
+  }
+  
+  function updateSettings(result) {
+    result.forEach(addToSettings);
+    console.log("settings updated with :");
+    console.log(result);
+    fs.writeFile(settingsFile, JSON.stringify(settings, null, 2));
+  }
+  
+  //appeler la méthode de traduction avec callback :
+  console.log("chargement des settings depuis le fichier :");
+  console.log(settings);
+  api.getAllSettings(processFullUpdate, askFullUpdateAgain)
 }
 
 module.exports.sendWaterTempMeasure = sendWaterTempMeasure;
@@ -125,4 +135,3 @@ module.exports.watchLowerWaterLevel = watchLowerWaterLevel;
 module.exports.checkWaterCycleDurations = checkWaterCycleDurations;
 module.exports.sendPHMeasure = sendPHMeasure;
 module.exports.loadDeviceSettings = loadDeviceSettings;
-module.exports.initLightingSystem = initLightingSystem;
