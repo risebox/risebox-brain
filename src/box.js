@@ -8,6 +8,10 @@ var Box = function(tankDimensions) {
   var SettingsManager = require('./settings-manager');
   var settings = new SettingsManager(api);
   
+  settings.on('change', function(settings){
+    applySettingsChanges(settings);
+  });
+  
   var sensors = require('./sensors/sensors');
   var airProbe              = new sensors.AirProbe("P9_15"),
       waterTempProbe        = new sensors.WaterTempProbe("P9_12"),
@@ -15,6 +19,26 @@ var Box = function(tankDimensions) {
       lowerWaterLevelProbe  = new sensors.WaterLevelProbe('LOWER', null),
       waterVolumeProbe      = new sensors.WaterVolumeProbe(dimensions),
       phProbe               = new sensors.PHProbe('P9_36');
+  
+  var LightController = require('./controllers/light-controller');
+  var upperLights = new LightController({blue: 'P9_14', red: 'P9_16', white: 'P8_13'});
+  
+  function applySettingsChanges(s){
+    now = new Date();
+    allWhiteDate = Date.parse(s.all_white_until)
+    if(allWhiteDate > now){
+      console.log("we should be white");
+      upperLights.sightLights();
+      duration = (allWhiteDate - now);
+      console.log("duration");
+      console.log(duration);
+      setTimeout(function(){
+        upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
+      }, duration);
+    } else {
+      upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
+    }
+  }
   
   function apiPath(){
     if (process.env.MOCK_API === 'true') {

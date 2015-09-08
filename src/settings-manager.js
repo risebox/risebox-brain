@@ -1,14 +1,16 @@
 var fs = require('fs');
 var settingsFile = path('/settings/current-settings.json');
 var settings   = require(settingsFile);
+EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 var SettingsManager = function(api){
   var api = api;
+  EventEmitter.call(this);
+  var that = this;
   
   this.load = function(){
-    //appeler la méthode de traduction avec callback :
-    console.log("chargement des settings depuis le fichier :");
-    console.log(settings);
+    this.emit('change', settings);
     api.getAllSettings(processFullUpdate, askFullUpdateAgain)
   }
   
@@ -20,14 +22,14 @@ var SettingsManager = function(api){
     api.getDeltaSettings(function(result){
       if(result.result.length > 0) { 
         updateSettings(result.result);
-        // appeler la methode de traduction de settings en ordres
+          that.emit('change', settings);
         }
     });
   }
   
   function processFullUpdate(result){
     updateSettings(result.result)
-    // appeler la methode de traduction de settings en ordres
+    that.emit('change', settings);
     setInterval(watchAndUpdateSettings, 5000);
   }
   
@@ -37,11 +39,11 @@ var SettingsManager = function(api){
   
   function updateSettings(result) {
     result.forEach(addToSettings);
-    console.log("settings updated with :");
-    console.log(result);
     fs.writeFile(settingsFile, JSON.stringify(settings, null, 2));
   }
   
 }
+
+util.inherits(SettingsManager, EventEmitter);
 
 module.exports = SettingsManager;
