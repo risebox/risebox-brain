@@ -5,7 +5,8 @@ path = function(pathString) {
   return process.cwd() + pathString;
 }
 
-var box      = require('./box');
+var Box      = require('./box');
+var box = new Box({'width': 110, 'depth': 50, 'probeHeight': 45});
 
 box.loadDeviceSettings();
 
