@@ -4,6 +4,7 @@ var LightController = function(pins){
   var bluePin = pins.blue;
   var redPin  = pins.red;
   var whitePin  = pins.white;
+  var currentLights = [];
   
   this.growLights = function(blue, red, white){
     max = Math.max(blue, red, white);
@@ -20,10 +21,24 @@ var LightController = function(pins){
   }
   
   function setLights(blue, red, white){
-    b.analogWrite(bluePin, blue, 2000, printJSON);
-    b.analogWrite(redPin, red, 2000, printJSON);
-    b.analogWrite(whitePin, white, 2000, printJSON);
+    if(anythingToChange(blue, red, white)) {
+      b.analogWrite(bluePin, blue, 2000, printJSON);
+      b.analogWrite(redPin, red, 2000, printJSON);
+      b.analogWrite(whitePin, white, 2000, printJSON);
+      currentLights = [blue, red, white];
+    }
   }
+  
+  function anythingToChange(blue, red, white){
+    newLights = [blue, red, white];
+    var i = newLights.length;
+    if (i != currentLights.length) return true;
+    while (i--) {
+        if (newLights[i] !== currentLights[i]) return true;
+    }
+    return false;
+  }
+  
   
   function printJSON(x) { 
       console.log("color "+x.value+ " set");

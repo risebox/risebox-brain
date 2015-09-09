@@ -8,7 +8,11 @@ var Box = function(tankDimensions) {
   var SettingsManager = require('./settings-manager');
   var settings = new SettingsManager(api);
   
-  settings.on('change', function(settings){
+  settings.on('change', function(){
+    console.log('settings were changed');
+  });
+  
+  settings.on('process', function(settings){
     applySettingsChanges(settings);
   });
   
@@ -25,19 +29,43 @@ var Box = function(tankDimensions) {
   
   function applySettingsChanges(s){
     now = new Date();
-    allWhiteDate = Date.parse(s.all_white_until)
-    if(allWhiteDate > now){
-      console.log("we should be white");
-      upperLights.sightLights();
-      duration = (allWhiteDate - now);
-      console.log("duration");
-      console.log(duration);
-      setTimeout(function(){
-        upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
-      }, duration);
-    } else {
-      upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
+    allWhiteDate = Date.parse(s.all_white_until);
+    noLightsDate = Date.parse(s.no_lights_until);
+    thisMoment = now.getHours() + now.getMinutes() / 60;
+    console.log(thisMoment);
+    dayStart = s.day_hours + s.day_minutes / 60;
+    console.log(dayStart);
+    dayEnd = s.night_hours + s.night_minutes / 60;
+    console.log(dayEnd);
+    silentDate = Date.parse(s.silent_until);
+    if(noLightsDate > now) { 
+      lightMode = 'dark';
     }
+    else {
+      if(allWhiteDate > now) {
+        lightMode = 'sight';
+      }
+      else {
+        if(thisMoment >= dayStart && thisMoment <= dayEnd) {
+          lightMode = 'grow';
+        }
+        else {
+          lightMode = 'dark';
+        }
+      }
+    }
+    console.log('lightMode ' + lightMode);
+    switch (lightMode) {
+      case 'dark':
+        upperLights.noLights();
+        break;
+      case 'sight':
+        upperLights.sightLights();
+        break;
+      default:
+        upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
+    }
+    //todo if now < silentDate, activer la gpio qui éteint la pompe
   }
   
   function apiPath(){

@@ -10,7 +10,8 @@ var SettingsManager = function(api){
   var that = this;
   
   this.load = function(){
-    this.emit('change', settings);
+    this.emit('change');
+    this.emit('process', settings);
     api.getAllSettings(processFullUpdate, askFullUpdateAgain)
   }
   
@@ -22,14 +23,16 @@ var SettingsManager = function(api){
     api.getDeltaSettings(function(result){
       if(result.result.length > 0) { 
         updateSettings(result.result);
-          that.emit('change', settings);
-        }
+        that.emit('change');
+      }
+      that.emit('process', settings);
     });
   }
   
   function processFullUpdate(result){
     updateSettings(result.result)
-    that.emit('change', settings);
+    that.emit('change');
+    that.emit('process', settings);
     setInterval(watchAndUpdateSettings, 5000);
   }
   
