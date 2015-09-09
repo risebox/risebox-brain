@@ -205,15 +205,23 @@ git config --global user.email "brain-dev@risebox.co"
 ```
 P9_12 : retour de la sonde ds18b20
 P9_15 : retour de la sonde DHT22
-P9_14 : pwm leds bleues
-P9_16 : pwm leds rouges
+P9_14 : pwm leds bleues upper
+P9_16 : pwm leds rouges upper
+P8_13 : pwm leds blanches upper
+P?_?? : pwm leds bleues lower
+P?_?? : pwm leds rouges lower
+P?_?? : pwm leds blanches lower
 P9_34 : AGND - masse de l’ADC relié à la masse de la sonde PH
 P9_36 : retour analogique de la sonde Ph (milieu du pont diviseur de tension)
-P9_8 : alim de la sonde PH
+P9_8  : alim de la sonde PH
 P8_12 : Trigger sonde ultrason
 P8_11 : eco sonde ultrasons
-P8_7 : niveau d’eau - cycle (fil noir)
-P8_8 : niveau d’eau - débordement (fil rouge)
+P8_7  : niveau d’eau upper - cycle (fil noir)
+P8_8  : niveau d’eau upper - débordement (fil rouge)
+P8_9  : niveau d’eau lower - cycle (fil noir)
+P8_10 : niveau d’eau lower - débordement (fil rouge)
+P8_15 : déclenchement des ventilos
+P8_16 : arret de la pompe
 ```
 
 ##<a name="extras"></a>Extras
