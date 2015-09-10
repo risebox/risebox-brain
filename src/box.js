@@ -133,9 +133,21 @@ var Box = function(tankDimensions) {
     });*/
   }
   
-  var controlPump = function(status){
-    /*api.sendAlert('UOVF');*/
-    if (status == 'overflow'){
+  var overFlowStatuses = {};
+  
+  var stopPump = function(position, status){
+    overFlowStatuses[position] = status;
+    
+    var stopPump = false;
+    Object.keys(overFlowStatuses).forEach(function(level){
+      stopPump = (overFlowStatuses[level] == 'overflow');
+      if (stopPump == true){ return; }
+    });
+    return stopPump;
+  }
+  
+  var controlPump = function(position, status){
+    if (stopPump(position, status)){
       console.log('ZOOMMGG overflow !!! => Stopping the pump');
       pump.stop();
     } else {

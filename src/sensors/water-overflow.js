@@ -1,11 +1,14 @@
 var b = require('bonescript');
 
 var WaterOverflowProbe = function(position, pin){
+  const NORMAL = 'normal',
+        OVERFLOW = 'overflow';
+  
   this.position = position;
   this.pin = pin;
   
   this.status = function(value){
-    return (value == 0 ? 'normal' : 'overflow')
+    return (value == 0 ? NORMAL : OVERFLOW)
   }
   
   this.getStatus = function(callback){
@@ -17,7 +20,7 @@ var WaterOverflowProbe = function(position, pin){
     var handleStatus = function (x) {
       if (x.value === 0 || x.value === 1){
         console.log('Water overflow value at ' + that.position + " level is " + x.value);
-        callback(that.status(x.value));
+        callback(that.position, that.status(x.value));
       }
     }
     
@@ -37,7 +40,7 @@ var WaterOverflowProbe = function(position, pin){
       } else {
         if (x.value === 0 || x.value === 1){
           console.log('Water overflow value changed at ' + that.position + " level");
-          callback(that.status(x.value));
+          callback(that.position, that.status(x.value));
         }
       }
     };
