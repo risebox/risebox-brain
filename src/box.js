@@ -26,11 +26,11 @@ var Box = function(tankDimensions) {
       waterVolumeProbe         = new sensors.WaterVolumeProbe(dimensions),
       phProbe                  = new sensors.PHProbe('P9_36');
   
-  var LightController = require('./controllers/light-controller');
-  var upperLights = new LightController({blue: 'P9_14', red: 'P9_16', white: 'P8_13'});
+  var controllers = require('./controllers/controllers');
   
-  var PumpController = require('./controllers/pump-controller');
-  var pump = new PumpController('P8_16');
+  var upperLights = new controllers.LightController({blue: 'P9_14', red: 'P9_16', white: 'P8_13'});
+  var pump        = new controllers.PumpController('P8_16');
+  var fan         = new controllers.FanController('P8_15');
   
   function applySettingsChanges(s){
     now = new Date();
@@ -40,6 +40,7 @@ var Box = function(tankDimensions) {
     dayStart = s.day_hours + s.day_minutes / 60;
     dayEnd = s.night_hours + s.night_minutes / 60;
     silentDate = Date.parse(s.silent_until);
+    currentHourlyRatio = now.getMinutes() / 60;
     
     if(noLightsDate > now) { 
       lightMode = 'dark';
@@ -69,6 +70,13 @@ var Box = function(tankDimensions) {
       default:
         upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
     }
+    
+    if (currentHourlyRatio <= s.fan_duty_ratio){
+      fan.start();
+    } else {
+      fan.stop();
+    }
+    
     //todo if now < silentDate, activer la gpio qui éteint la pompe
   }
   
