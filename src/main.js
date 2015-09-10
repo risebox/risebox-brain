@@ -8,11 +8,13 @@ path = function(pathString) {
 var Box      = require('./box');
 var box = new Box({'width': 110, 'depth': 50, 'probeHeight': 45});
 
-setInterval(box.sendWaterTempMeasure, 6000);
+/*setInterval(box.sendWaterTempMeasure, 6000);
 setInterval(box.sendAirTempAndHumMeasure, 6000);
-setInterval(box.sendPHMeasure, 6000);
+setInterval(box.sendPHMeasure, 6000);*/
 
-box.watchUpperWaterLevel();
-box.watchLowerWaterLevel();
-setInterval(box.checkWaterCycleDurations, 30000);
-  
+/*box.watchUpperWaterLevel();*/
+box.watchUpperWaterOverflow();
+/*box.watchLowerWaterLevel();*/
+/*box.watchLowerWaterOverflow();*/
+
+/*setInterval(box.checkWaterCycleDurations, 30000);*/

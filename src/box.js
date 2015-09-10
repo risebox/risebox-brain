@@ -17,27 +17,30 @@ var Box = function(tankDimensions) {
   });
   
   var sensors = require('./sensors/sensors');
-  var airProbe              = new sensors.AirProbe("P9_15"),
-      waterTempProbe        = new sensors.WaterTempProbe("P9_12"),
-      upperWaterLevelProbe  = new sensors.WaterLevelProbe('UPPER', 'P8_7'),
-      lowerWaterLevelProbe  = new sensors.WaterLevelProbe('LOWER', null),
-      waterVolumeProbe      = new sensors.WaterVolumeProbe(dimensions),
-      phProbe               = new sensors.PHProbe('P9_36');
+  var airProbe                 = new sensors.AirProbe("P9_15"),
+      waterTempProbe           = new sensors.WaterTempProbe("P9_12"),
+      upperWaterLevelProbe     = new sensors.WaterLevelProbe('UPPER', 'P8_7'),
+      upperWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', 'P8_8'),
+      lowerWaterLevelProbe     = new sensors.WaterLevelProbe('LOWER', null),
+      lowerWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', null),
+      waterVolumeProbe         = new sensors.WaterVolumeProbe(dimensions),
+      phProbe                  = new sensors.PHProbe('P9_36');
   
   var LightController = require('./controllers/light-controller');
   var upperLights = new LightController({blue: 'P9_14', red: 'P9_16', white: 'P8_13'});
+  
+  var PumpController = require('./controllers/pump-controller');
+  var pump = new PumpController('P8_16');
   
   function applySettingsChanges(s){
     now = new Date();
     allWhiteDate = Date.parse(s.all_white_until);
     noLightsDate = Date.parse(s.no_lights_until);
     thisMoment = now.getHours() + now.getMinutes() / 60;
-    console.log(thisMoment);
     dayStart = s.day_hours + s.day_minutes / 60;
-    console.log(dayStart);
     dayEnd = s.night_hours + s.night_minutes / 60;
-    console.log(dayEnd);
     silentDate = Date.parse(s.silent_until);
+    
     if(noLightsDate > now) { 
       lightMode = 'dark';
     }
@@ -54,6 +57,7 @@ var Box = function(tankDimensions) {
         }
       }
     }
+    
     console.log('lightMode ' + lightMode);
     switch (lightMode) {
       case 'dark':
@@ -117,7 +121,6 @@ var Box = function(tankDimensions) {
       }
       api.sendMeasure('LCYC', cycleTime);
     });
-  
   }
   
   this.checkWaterCycleDurations = function(){
@@ -128,6 +131,27 @@ var Box = function(tankDimensions) {
     /*lowerWaterLevelProbe.checkCycleDuration(function(cycleTime){
        //api.sendAlert('LCYC', cycleTime);
     });*/
+  }
+  
+  var controlPump = function(status){
+    /*api.sendAlert('UOVF');*/
+    if (status == 'overflow'){
+      console.log('ZOOMMGG overflow !!! => Stopping the pump');
+      pump.stop();
+    } else {
+      console.log('No overflow => Starting the pump');
+      pump.start();
+    }
+  }
+  
+  this.watchUpperWaterOverflow = function(){
+    upperWaterOverflowProbe.getStatus(controlPump);
+    upperWaterOverflowProbe.watchOverflow(controlPump);
+  }
+  
+  this.watchLowerWaterOverflow = function(){
+    /*lowerWaterOverflowProbe.getStatus(controlPump);
+    lowerWaterOverflowProbe.watchOverflow(controlPump);*/
   }
   
   this.sendPHMeasure = function() {
