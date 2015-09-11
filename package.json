@@ -2,7 +2,8 @@
   "name": "risebox-brain",
   "version": "0.0.1",
   "dependencies": {
-    "node-env-file": ""
+    "node-env-file": "",
+    "bonescript": ""
   },
   "engines": {
     "node": "0.10.x",

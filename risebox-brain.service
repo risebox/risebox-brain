@@ -1,0 +1,11 @@
+[Unit] 
+Description=Risebox Brain 
+After=syslog.target network.target 
+
+[Service] 
+Type=simple
+WorkingDirectory=/var/lib/cloud9/risebox-brain
+ExecStart=/var/lib/cloud9/risebox-brain/risebox-brain.sh 
+
+[Install] 
+WantedBy=multi-user.target
