@@ -29,23 +29,31 @@ export RISEBOX_HOME=/home/risebox
 
 1. Network
 
-Vérifier que le réseau Ethernet fonctionne, regarder [ici](https://learn.adafruit.com/beaglebone/ethernet)
+Check Ethernet is working and that you have Internet connection by following [this](https://learn.adafruit.com/beaglebone/ethernet) tutorial.
 
 
-2. Update system
+2. Update system & Kernel
 ```
 sudo apt-get update
 ```
+also update Kernel to latest 3.8 linux (more info [here](http://elinux.org/Beagleboard:BeagleBoneBlack_Debian#Kernel_Upgrade))
+```
+cd /opt/scripts/tools/
+git pull
+sudo ./update_kernel.sh
+sudo reboot
+```
 
-3. Setter la date et l’heure
+3. Setup Date & Time
 ```
 date -s "August 24 10:00 UTC 2015"
 ```
 
-4. Installer la sonde temperature DS18B20
+4. Install temperature probe DS18B20
 
-Créer un /home/risebox/w1.dts avec le contenu suivant:
+Create a folder  __/home/risebox/w1.dts__ with the following content:
 
+```bash
 /*
 * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
 *
@@ -89,6 +97,7 @@ Créer un /home/risebox/w1.dts avec le contenu suivant:
         };
     };
 };
+```
 
 Taper la commande suivante: qui va créer le fichier __ BB-W1-00A0.dtbo__ dans le répertoire
 ```
@@ -222,6 +231,41 @@ P8_9  : niveau d’eau lower - cycle (fil noir)
 P8_10 : niveau d’eau lower - débordement (fil rouge)
 P8_15 : déclenchement des ventilos
 P8_16 : arret de la pompe
+```
+
+10. Setup Wifi
+
+Get this [PDF](https://learn.adafruit.com/downloads/pdf/setting-up-wifi-with-beaglebone-black.pdf) from Adafruit.
+Follow instructions:
+
+* Check that wlan0 is present but not assigned by running the following command
+```
+iwconfig
+```
+
+* Edit network interfaces
+```
+vi /etc/network/interfaces
+```
+
+* Uncomment these 3 lines & put edit your network's __SSID__ and __password__
+```
+# WiFi Example
+#auto wlan0
+#iface wlan0 inet dhcp
+# wpa-ssid "essid"
+# wpa-psk "password"
+```
+
+* Test the connection by running the following to bring up the WiFi connection manually:
+```
+ifup wlan0
+```
+You should see an IP address acquired with DHCP
+
+Then finally reboot your system:
+```
+reboot
 ```
 
 ##<a name="extras"></a>Extras
