@@ -71,13 +71,16 @@ var Box = function(tankDimensions) {
         upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
     }
     
-    if (currentHourlyRatio <= s.fan_duty_ratio){
-      fan.start();
+    if (now < silentDate){
+     pump.stop();
+     fan.stop();
     } else {
-      fan.stop();
+      if (currentHourlyRatio <= s.fan_duty_ratio){
+        fan.start();
+      } else {
+        fan.stop();
+      }
     }
-    
-    //todo if now < silentDate, activer la gpio qui éteint la pompe
   }
   
   function apiPath(){
