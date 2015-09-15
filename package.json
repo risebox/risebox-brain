@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "node-env-file": "",
-    "bonescript": ""
+    "bonescript": "git://github.com/risebox/bonescript.git"
   },
   "engines": {
     "node": "0.10.x",

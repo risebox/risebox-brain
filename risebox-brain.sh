@@ -1,5 +1,6 @@
 #!/bin/bash
 slotsFile="/sys/devices/bone_capemgr.9/slots"
+PWMPolarityFiles="/sys/devices/ocp.*/bs_pwm_test_P*/polarity"
 
 checkAndLoadOverlay() {
   if [[ -n $(cat $slotsFile | grep $1) ]]; then
@@ -8,6 +9,14 @@ checkAndLoadOverlay() {
     echo "$1" > $slotsFile
     echo "$1 loaded"
   fi
+}
+
+waitUntilPWMisLoaded() {
+  
+  while [ $(find $PWMPolarityFiles | wc -l) -lt 3 ]
+  do
+    sleep 1
+  done
 }
 
 initSettingsFile() {
@@ -26,6 +35,16 @@ checkAndLoadOverlay "cape-bone-iio"
 checkAndLoadOverlay "BB-W1"
 
 checkAndLoadOverlay "hcsr04"
+
+#activate pwm
+checkAndLoadOverlay "am33xx_pwm"
+
+#register pwm pins
+checkAndLoadOverlay "bspwm_P9_14"
+checkAndLoadOverlay "bspwm_P9_16"
+checkAndLoadOverlay "bspwm_P8_13"
+
+#waitUntilPWMisLoaded
 
 initSettingsFile
 

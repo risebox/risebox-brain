@@ -1,4 +1,5 @@
 var b = require('bonescript');
+var fs = require('fs');
 
 var LightController = function(pins){
   var bluePin = pins.blue;
@@ -22,6 +23,7 @@ var LightController = function(pins){
   
   function setLights(blue, red, white){
     if(anythingToChange(blue, red, white)) {
+      console.log('Change lights : B ' + blue + ' R ' + red + ' W ' + white);
       b.analogWrite(bluePin, blue, 2000, printJSON);
       b.analogWrite(redPin, red, 2000, printJSON);
       b.analogWrite(whitePin, white, 2000, printJSON);
@@ -39,9 +41,8 @@ var LightController = function(pins){
     return false;
   }
   
-  
-  function printJSON(x) { 
-      console.log("color "+x.value+ " set");
+  function printJSON(x) {
+      console.log(JSON.stringify(x));
     }
 }
 
