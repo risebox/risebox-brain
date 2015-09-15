@@ -31,6 +31,17 @@ export RISEBOX_HOME=/home/risebox
 
 Check Ethernet is working and that you have Internet connection by following [this](https://learn.adafruit.com/beaglebone/ethernet) tutorial.
 
+Then change the BBB hostname by editing /etc/hosts and /etc/hostname files. Do not use "." in the name.
+Classic naming is risebox-[box key].
+
+Then reboot.
+
+Your box can now be ssh-ed like this : 
+
+```
+ssh risebox-[box key].local -l root
+```
+
 
 2. Update system & Kernel
 ```
@@ -300,10 +311,33 @@ Pour vérifier que le HDMI est bien désactivé, faire un __cat /sys/devices/bon
 
 ##<a name="run"></a>Run
 
-To run the brain program, use __start.sh__ script
+### Autorun when system starts
+
+* Create link for systemd
+```
+ln /lib/systemd/risebox-brain.service $RISEBOX_HOME/risebox-brain.service
+```
+
+* Make systemd reload the configuration file, start the service immediately (helps to see if the service is functioning properly) and enable the unit files specified in the command line.
+```bash
+systemctl start risebox-brain.service
+systemctl enable risebox-brain.service
+```
+
+The following commands may be usefull
+```bash
+systemctl --system daemon-reload
+systemctl status risebox-brain.service
+```
+
+### Manual execution
+
+To run the brain program manually, use __risebox-brain.sh__ script
 
 ```bash
 cd /var/lib/cloud9/risebox-brain
-./start.sh
+./risebox-brain.sh
 ```
+
+
 
