@@ -1,4 +1,5 @@
 var fs = require('fs');
+var b = require('bonescript');
 
 var Box = function(tankDimensions) {
 
@@ -21,14 +22,15 @@ var Box = function(tankDimensions) {
       waterTempProbe           = new sensors.WaterTempProbe("P9_12"),
       upperWaterLevelProbe     = new sensors.WaterLevelProbe('UPPER', 'P8_7'),
       upperWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', 'P8_8'),
-      lowerWaterLevelProbe     = new sensors.WaterLevelProbe('LOWER', null),
-      lowerWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', null),
+      lowerWaterLevelProbe     = new sensors.WaterLevelProbe('LOWER', 'P8_9'),
+      lowerWaterOverflowProbe  = new sensors.WaterOverflowProbe('LOWER', 'P8_10'),
       waterVolumeProbe         = new sensors.WaterVolumeProbe(dimensions),
-      phProbe                  = new sensors.PHProbe('P9_36');
+      phProbe                  = new sensors.PHProbe('P9_23', 'P9_36');
   
   var controllers = require('./controllers/controllers');
   
-  var upperLights = new controllers.LightController({blue: 'P9_14', red: 'P9_16', white: 'P8_13'});
+  var upperLights = new controllers.LightController({blue: 'P8_36', red: 'P8_45', white: 'P8_46'});
+  var lowerLights = new controllers.LightController({blue: 'P9_29', red: 'P9_31', white: 'P9_42'});
   var pump        = new controllers.PumpController('P8_16');
   var fan         = new controllers.FanController('P8_15');
   
@@ -63,12 +65,15 @@ var Box = function(tankDimensions) {
     switch (lightMode) {
       case 'dark':
         upperLights.noLights();
+        lowerLights.noLights();
         break;
       case 'sight':
         upperLights.sightLights();
+        lowerLights.sightLights();
         break;
       default:
         upperLights.growLights(s.upper_blue, s.upper_red, s.upper_white);
+        lowerLights.growLights(s.lower_blue, s.lower_red, s.lower_white);
     }
     
     if (now < silentDate){
@@ -89,6 +94,12 @@ var Box = function(tankDimensions) {
     } else {
       return './api/api'
     }
+  }
+  
+  this.statusLight = function (){
+    b.analogWrite('P8_34', 0.5, 2000, function(x){
+      console.log('statusLight ' + JSON.stringify(x));
+    });
   }
   
   this.sendWaterTempMeasure = function (){
@@ -139,9 +150,9 @@ var Box = function(tankDimensions) {
       console.log('sending alert for UPPER waterLevel: cycle time ' + cycleTime + ' is not OK');
       api.sendAlert('UCYC', cycleTime, description);
     });
-    /*lowerWaterLevelProbe.checkCycleDuration(function(cycleTime){
-       //api.sendAlert('LCYC', cycleTime);
-    });*/
+    lowerWaterLevelProbe.checkCycleDuration(function(cycleTime, description){
+       api.sendAlert('LCYC', cycleTime, description);
+    });
   }
   
   var overFlowStatuses = {};
@@ -150,10 +161,13 @@ var Box = function(tankDimensions) {
     overFlowStatuses[position] = status;
     
     var stopPump = false;
-    Object.keys(overFlowStatuses).forEach(function(level){
-      stopPump = (overFlowStatuses[level] == 'overflow');
-      if (stopPump == true){ return; }
-    });
+    for (var key in overFlowStatuses) {
+      stopPump = (overFlowStatuses[key] == 'overflow');
+      if (stopPump == true){ 
+        break;
+      }
+    }
+    
     return stopPump;
   }
   
@@ -173,8 +187,8 @@ var Box = function(tankDimensions) {
   }
   
   this.watchLowerWaterOverflow = function(){
-    /*lowerWaterOverflowProbe.getStatus(controlPump);
-    lowerWaterOverflowProbe.watchOverflow(controlPump);*/
+    lowerWaterOverflowProbe.getStatus(controlPump);
+    lowerWaterOverflowProbe.watchOverflow(controlPump);
   }
   
   this.sendPHMeasure = function() {

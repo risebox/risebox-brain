@@ -40,9 +40,16 @@ checkAndLoadOverlay "hcsr04"
 checkAndLoadOverlay "am33xx_pwm"
 
 #register pwm pins
-checkAndLoadOverlay "bspwm_P9_14"
-checkAndLoadOverlay "bspwm_P9_16"
-checkAndLoadOverlay "bspwm_P8_13"
+#state led
+checkAndLoadOverlay "bspwm_P8_34"
+#upper leds
+checkAndLoadOverlay "bspwm_P9_29"
+checkAndLoadOverlay "bspwm_P9_31"
+checkAndLoadOverlay "bspwm_P9_42"
+#lower leds
+checkAndLoadOverlay "bspwm_P8_36"
+checkAndLoadOverlay "bspwm_P8_45"
+checkAndLoadOverlay "bspwm_P8_46"
 
 #waitUntilPWMisLoaded
 
