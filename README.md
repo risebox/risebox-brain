@@ -231,7 +231,7 @@ P9_42 : pwm leds blanches upper
 P8_36 : pwm leds bleues lower
 P8_45 : pwm leds rouges lower
 P8_46 : pwm leds blanches lower
-P9_16 : pwm RBG Status LED
+P8_34 : pwm RBG Status LED
 P9_34 : AGND - masse de l’ADC relié à la masse de la sonde PH
 P9_36 : retour analogique de la sonde Ph (milieu du pont diviseur de tension)
 P9_8  : alim de la sonde PH
