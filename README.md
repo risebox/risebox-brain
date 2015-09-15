@@ -225,13 +225,15 @@ git config --global user.email "brain-dev@risebox.co"
 ```
 P9_12 : retour de la sonde ds18b20
 P9_15 : retour de la sonde DHT22
-P9_14 : pwm leds bleues upper
-P9_16 : pwm leds rouges upper
-P8_13 : pwm leds blanches upper
-P?_?? : pwm leds bleues lower
-P?_?? : pwm leds rouges lower
-P?_?? : pwm leds blanches lower
+P9_29 : pwm leds bleues upper
+P9_31 : pwm leds rouges upper
+P9_42 : pwm leds blanches upper
+P8_36 : pwm leds bleues lower
+P8_45 : pwm leds rouges lower
+P8_46 : pwm leds blanches lower
+P8_34 : pwm RBG Status LED
 P9_34 : AGND - masse de l’ADC relié à la masse de la sonde PH
+P9_23 : GPIO commandant le relais qui alimente ou non la sonde PH
 P9_36 : retour analogique de la sonde Ph (milieu du pont diviseur de tension)
 P9_8  : alim de la sonde PH
 P8_12 : Trigger sonde ultrason
