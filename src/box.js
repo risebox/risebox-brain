@@ -77,8 +77,8 @@ var Box = function(tankDimensions) {
     }
     
     if (now < silentDate){
-     pump.stop();
-     fan.stop();
+      pump.stop();
+      fan.stop();
     } else {
       if (currentHourlyRatio <= s.fan_duty_ratio){
         fan.start();
@@ -112,6 +112,8 @@ var Box = function(tankDimensions) {
     airProbe.getAirTempAndHum(function(value){
       api.sendMeasure('ATEMP', value.temp);
       api.sendMeasure('AHUM', value.hum);
+    }, function(error){
+      api.sendLog(error);
     });
   }
   
@@ -173,7 +175,7 @@ var Box = function(tankDimensions) {
   
   var controlPump = function(position, status){
     if (stopPump(position, status)){
-      console.log('ZOOMMGG overflow !!! => Stopping the pump');
+      console.log('warn', 'ZOOMMGG overflow !!! => Stopping the pump');
       pump.stop();
     } else {
       console.log('No overflow => Starting the pump');
@@ -194,11 +196,12 @@ var Box = function(tankDimensions) {
   this.sendPHMeasure = function() {
     phProbe.getPH(function(phValue) {
       api.sendMeasure('PH', phValue);
+    },function(errorMsg){
+      api.sendLog('PH', errorMsg);
     });
   }
   
   settings.load();
-  
 }
 
 module.exports = Box;

@@ -98,6 +98,13 @@ var sendAlert = function (metricKey, value, description){
   post(path, formData);
 }
 
+var sendLog = function (logMsg){
+  formData = { 'msg': logMsg};
+  path = '/api/devices/' + process.env.RISEBOX_KEY + '/logs';
+  console.log('=====> API LOG '+logMsg);
+  /*post(path, formData);*/
+}
+
 var getAllSettings = function (success, error) {
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
   get(path, { 'mode' : 'full' }, success, error);
@@ -111,5 +118,7 @@ var getDeltaSettings = function (success, error) {
 
 module.exports.sendMeasure       = sendMeasure;
 module.exports.sendAlert         = sendAlert;
+module.exports.sendLog           = sendLog;
 module.exports.getAllSettings    = getAllSettings;
 module.exports.getDeltaSettings  = getDeltaSettings;
+

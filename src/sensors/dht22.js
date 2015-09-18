@@ -12,10 +12,14 @@ var AirProbe = function(pin){
     return {temp: parseFloat(result[1]), hum: parseFloat(result[3])};
   }
   
-  this.getAirTempAndHum = function(callback) {
+  this.getAirTempAndHum = function(successCb, errorCb) {
     var cmd = pythonScript + ' 22 ' + pin;
     exec(cmd, function(error, stdout, stderr) {
-      callback(extractTempAndHum(stdout));
+      if (error == null) {
+        successCb(extractTempAndHum(stdout));
+      } else {
+        errorCb(error)
+      }
     });
   }
 }

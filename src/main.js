@@ -5,6 +5,12 @@ path = function(pathString) {
   return process.cwd() + pathString;
 }
 
+src_path = function(pathString) {
+  return path('/src/' + pathString);
+}
+
+u = require('./utils/utils');
+
 var Box      = require('./box');
 var box = new Box({'width': 110, 'depth': 50, 'probeHeight': 45});
 
