@@ -231,19 +231,21 @@ P9_42 : pwm leds blanches upper
 P8_36 : pwm leds bleues lower
 P8_45 : pwm leds rouges lower
 P8_46 : pwm leds blanches lower
-P8_34 : pwm RBG Status LED
+P8_34 : pwm Status LED on multifunction button
+P8_32 : multifunction button
 P9_34 : AGND - masse de l’ADC relié à la masse de la sonde PH
 P9_23 : GPIO commandant le relais qui alimente ou non la sonde PH
 P9_36 : retour analogique de la sonde Ph (milieu du pont diviseur de tension)
 P9_8  : alim de la sonde PH
 P8_12 : Trigger sonde ultrason
-P8_11 : eco sonde ultrasons
+P8_11 : echo sonde ultrasons
 P8_7  : niveau d’eau upper - cycle (fil noir)
 P8_8  : niveau d’eau upper - débordement (fil rouge)
 P8_9  : niveau d’eau lower - cycle (fil noir)
 P8_10 : niveau d’eau lower - débordement (fil rouge)
 P8_15 : déclenchement des ventilos
 P8_16 : arret de la pompe
+P8_17 : mise en marche de l'oxygénateur
 ```
 
 10. Setup Wifi
