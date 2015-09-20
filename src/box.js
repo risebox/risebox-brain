@@ -113,7 +113,7 @@ var Box = function(tankDimensions) {
       api.sendMeasure('ATEMP', value.temp);
       api.sendMeasure('AHUM', value.hum);
     }, function(error){
-      api.sendLog(error);
+      api.sendLog('error', error);
     });
   }
   
@@ -197,7 +197,7 @@ var Box = function(tankDimensions) {
     phProbe.getPH(function(phValue) {
       api.sendMeasure('PH', phValue);
     },function(errorMsg){
-      api.sendLog('PH', errorMsg);
+      api.sendLog('error', errorMsg);
     });
   }
   

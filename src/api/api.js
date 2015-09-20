@@ -98,11 +98,10 @@ var sendAlert = function (metricKey, value, description){
   post(path, formData);
 }
 
-var sendLog = function (logMsg){
-  formData = { 'msg': logMsg};
+var sendLog = function (level, msg){
+  formData = { 'level': level, 'body': msg, 'logged_at': new Date()};
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/logs';
-  console.log('=====> API LOG '+logMsg);
-  /*post(path, formData);*/
+  post(path, formData);
 }
 
 var getAllSettings = function (success, error) {
