@@ -1,42 +1,44 @@
 var querystring = require('querystring'),
     https = require('https');
 
+var API_URL = 'rbdev-api.herokuapp.com';
+var HEADERS = { 'Accept': 'application/json',
+                'RISEBOX-SECRET': process.env.RISEBOX_SECRET,
+                'RISEBOX-API-CLIENT': 'app' };
+
 function post(path, data){
   postData = querystring.stringify(data);
-  
+
   options = {
-    hostname: 'rbdev-api.herokuapp.com',
+    hostname: API_URL,
     path: path,
     method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'RISEBOX-SECRET': process.env.RISEBOX_SECRET
-    }
+    headers: HEADERS
   };
-  
+
   req = https.request(options, function(res) {
     var responseString = '';
     res.setEncoding('utf8');
-    
+
     //console.log('STATUS: ' + res.statusCode);
     //console.log('HEADERS: ' + JSON.stringify(res.headers));
-    
+
     res.on('data', function (chunk) {
       responseString += chunk;
       //console.log('BODY: ' + chunk);
     });
-    
+
     res.on('end', function() {
       console.log(responseString);
       //var responseObject = JSON.parse(responseString);
       //success(responseObject);
     });
   });
-  
+
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
   });
-  
+
   req.write(postData);
   req.end();
 
@@ -44,22 +46,19 @@ function post(path, data){
 
 function get(path, data, success, error){
   qs = querystring.stringify(data);
-  
+
   options = {
-    hostname: 'rbdev-api.herokuapp.com',
+    hostname: API_URL,
     path: path + '?' + qs,
     method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'RISEBOX-SECRET': process.env.RISEBOX_SECRET
-    }
+    headers: HEADERS
   };
-  
+
   req = https.request(options, function(res) {
-    
+
     var responseString = '';
     res.setEncoding('utf8');
-    
+
     //console.log('STATUS: ' + res.statusCode);
     //console.log('HEADERS: ' + JSON.stringify(res.headers));
 
@@ -67,20 +66,20 @@ function get(path, data, success, error){
       responseString += chunk;
       //console.log('BODY: ' + chunk);
     });
-    
+
     res.on('end', function() {
       //console.log(responseString);
       var responseObject = JSON.parse(responseString);
       success(responseObject);
     });
-    
+
   });
-  
+
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
     error(e);
   });
-  
+
   req.end();
 
 }
@@ -108,7 +107,7 @@ var getAllSettings = function (success, error) {
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
   get(path, { 'mode' : 'full' }, success, error);
 }
- 
+
 var getDeltaSettings = function (success, error) {
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
   get(path, { 'mode' : 'delta' }, success, error);
