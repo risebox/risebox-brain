@@ -235,7 +235,7 @@ P8_34 : pwm Status LED on multifunction button
 P8_32 : multifunction button
 P9_34 : AGND - masse de l’ADC relié à la masse de la sonde PH
 P9_23 : GPIO commandant le relais qui alimente ou non la sonde PH
-P9_36 : retour analogique de la sonde Ph (milieu du pont diviseur de tension)
+P9_35 : AIN6, retour analogique de la sonde Ph (milieu du pont diviseur de tension)
 P9_8  : alim de la sonde PH
 P8_12 : Trigger sonde ultrason
 P8_11 : echo sonde ultrasons
@@ -246,6 +246,8 @@ P8_10 : niveau d’eau lower - débordement (fil rouge)
 P8_15 : déclenchement des ventilos
 P8_16 : arret de la pompe
 P8_17 : mise en marche de l'oxygénateur
+P9_36 : AIN5, le power probe, détermine si le circuit est sur secteur ou batterie
+P9_37 : AIN2, la batterie level, mesure la tension à la sortie de la batterie
 ```
 
 10. Setup Wifi
