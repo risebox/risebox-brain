@@ -1,4 +1,5 @@
-var b = require('bonescript');
+var b = require('bonescript'),
+    l = require('../utils/logger');
 
 var WaterTempProbe = function(pin){
   var OneWireFolder = "/sys/devices/w1_bus_master1/",
@@ -14,8 +15,12 @@ var WaterTempProbe = function(pin){
   
   function setProbeId(callback){
     b.readTextFile('/sys/bus/w1/devices/w1_bus_master1/w1_master_slaves', function(x){
-      _probeId = x.data.substring(0, x.data.length-1)
-      callback(_probeId);  
+      if (x.data){
+        _probeId = x.data.substring(0, x.data.length-1)
+        callback(_probeId);
+      } else {
+        l.log('error', 'Could not write OneWire temperature file');
+      }
     });
   }
   
@@ -25,10 +30,15 @@ var WaterTempProbe = function(pin){
     return parseInt(result[2])/1000;
   }
   
-  this.getWaterTemp = function(callback){
+  this.getWaterTemp = function(successCb, errorCb){
     getProbeId(function(probeId){
       b.readTextFile(OneWireFolder + probeId + '/w1_slave', function(x){
-         callback(extractTempFromW1FileContent(x.data));
+        if (x.data){
+          successCb(extractTempFromW1FileContent(x.data));
+        } else {
+          l.log('error', 'Could not read temperature');
+          errorCb();
+        }
       });
     });
   }

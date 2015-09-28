@@ -112,7 +112,8 @@ var sendAlert = function (metricKey, value, description){
 }
 
 var sendLog = function (level, msg){
-  formData = { 'level': level, 'body': msg, 'logged_at': new Date()};
+  var now = new Date().getTime();
+  formData = { 'level': level, 'body': msg, 'logged_at': parseInt(now/1000)};
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/logs';
   post(path, formData);
 }

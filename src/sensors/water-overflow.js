@@ -1,4 +1,5 @@
-var b = require('bonescript');
+var b = require('bonescript'),
+    l = require('../utils/logger');
 
 var WaterOverflowProbe = function(position, pin){
   const NORMAL = 'normal',
@@ -19,7 +20,7 @@ var WaterOverflowProbe = function(position, pin){
     
     var handleStatus = function (x) {
       if (x.value === 0 || x.value === 1){
-        console.log('Water overflow value at ' + that.position + " level is " + x.value);
+        l.log('info', 'Water overflow ' + that.position + ' -  level is ' + x.value);
         callback(that.position, that.status(x.value));
       }
     }
@@ -31,15 +32,14 @@ var WaterOverflowProbe = function(position, pin){
     if (this.pin == null) return;
     
     b.pinMode(this.pin, b.INPUT);
-    console.log('I\'m watching ' + this.position + " water overflow");
     var that = this;
     
     var handleInterrupt = function(x){
       if (x.attached){
-        console.log('Water overflow attached at ' + that.position + " level");
+        l.log('info', 'Water overflow ' + that.position + ' - attached');
       } else {
         if (x.value === 0 || x.value === 1){
-          console.log('Water overflow value changed at ' + that.position + " level");
+          l.log('info', 'Water overflow ' + that.position + ' - value changed');
           callback(that.position, that.status(x.value));
         }
       }
@@ -49,7 +49,7 @@ var WaterOverflowProbe = function(position, pin){
   
   this.stopWatching = function(){
     b.detachInterrupt(pin);
-    console.log('Overflow detached');
+    l.log("info", 'Water overflow ' + this.position + ' - stop watching');
   }
   
 }

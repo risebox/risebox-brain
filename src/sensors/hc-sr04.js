@@ -1,21 +1,20 @@
 var b    = require('bonescript'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    l    = require('../utils/logger');
 
 var WaterVolumeProbe = function(dimensions){
   var probeScript = './lib/hcr.sh';
   this.dimensions = dimensions
   
   function averageDistance(sensorOutput) {
-    
     regexp = /Distance = ([\d|\.]*)/g;
     total = 0;
-    count=0;
+    count = 0;
     
     while (match = regexp.exec(sensorOutput)) {
       total = total + parseFloat(match[1]);
       count = count + 1;
     }
-    
     return total / count;
   }
   
@@ -24,10 +23,15 @@ var WaterVolumeProbe = function(dimensions){
     return volume
   }
   
-  this.getVolume = function(callback){
+  this.getVolume = function(successCb, errorCb){
     exec(probeScript, function(error, stdout, stderr){
-      waterVolume = volumeFromDistance(averageDistance(stdout));
-      callback(waterVolume);
+      if (error == null) {
+        waterVolume = volumeFromDistance(averageDistance(stdout));
+        successCb(waterVolume);
+      } else {
+        l.log('error', 'Could not measure water volume');
+        errorCb(error);
+      }
     });
   }
 }

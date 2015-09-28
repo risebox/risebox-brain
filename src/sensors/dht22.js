@@ -1,5 +1,6 @@
 var b    = require('bonescript'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    l = require('../utils/logger');
 
 var pythonScript = '/home/risebox/Adafruit_Python_DHT/examples/AdafruitDHT.py';
 
@@ -18,6 +19,7 @@ var AirProbe = function(pin){
       if (error == null) {
         successCb(extractTempAndHum(stdout));
       } else {
+        l.log('error', 'Could not read air temp & humidity');
         errorCb(error)
       }
     });

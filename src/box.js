@@ -1,5 +1,6 @@
-var fs = require('fs');
-var b = require('bonescript');
+var fs = require('fs'),
+    b = require('bonescript'),
+    l = require('./utils/logger');
 
 var Box = function(tankDimensions) {
 
@@ -10,7 +11,7 @@ var Box = function(tankDimensions) {
   var settings = new SettingsManager(api);
   
   settings.on('change', function(){
-    console.log('settings were changed');
+    l.log('info', 'SettingsManager - Settings were changed');
   });
   
   settings.on('process', function(settings){
@@ -35,6 +36,8 @@ var Box = function(tankDimensions) {
   var fan         = new controllers.FanController('P8_15');
   
   function applySettingsChanges(s){
+    l.log('info', 'SettingsManager - Applying settings');
+    
     now = new Date();
     allWhiteDate = Date.parse(s.all_white_until);
     noLightsDate = Date.parse(s.no_lights_until);
@@ -61,7 +64,8 @@ var Box = function(tankDimensions) {
       }
     }
     
-    console.log('lightMode ' + lightMode);
+    l.log('info', 'SettingsManager - Light is ' + lightMode);
+    
     switch (lightMode) {
       case 'dark':
         upperLights.noLights();
@@ -76,13 +80,17 @@ var Box = function(tankDimensions) {
         lowerLights.growLights(s.lower_blue, s.lower_red, s.lower_white);
     }
     
+    
     if (now < silentDate){
+      l.log('info', 'SettingsManager - Applying silent Mode');
       pump.stop();
       fan.stop();
     } else {
       if (currentHourlyRatio <= s.fan_duty_ratio){
+        l.log('info', 'SettingsManager - Fans on duty');
         fan.start();
       } else {
+        l.log('info', 'SettingsManager - Fans off duty');
         fan.stop();
       }
     }
@@ -98,13 +106,19 @@ var Box = function(tankDimensions) {
   
   this.statusLight = function (){
     b.analogWrite('P8_34', 0.5, 2000, function(x){
-      console.log('statusLight ' + JSON.stringify(x));
+      if (x.data){
+        l.log('info', 'StatusLight - ' + JSON.stringify(x)); 
+      } else {
+        l.log('error', 'StatusLight - Error ' + x.err); 
+      }
     });
   }
   
   this.sendWaterTempMeasure = function (){
     waterTempProbe.getWaterTemp(function(value){
       api.sendMeasure('WTEMP', value);
+    }, function(error){
+      api.sendLog('error', error);
     });
   }
   
@@ -125,6 +139,8 @@ var Box = function(tankDimensions) {
         if (now - lastLowerFlush < 60){
           waterVolumeProbe.getVolume(function(volume){
             api.sendMeasure('WVOL', volume);
+          }, function(error){
+            api.sendLog('error', error);
           });
         }
       }
@@ -140,6 +156,8 @@ var Box = function(tankDimensions) {
         if (now - lastUpperFlush < 60){
           waterVolumeProbe.getVolume(function(volume){
             api.sendMeasure('WVOL', volume);
+          }, function(error){
+            api.sendLog('error', error);
           });
         }
       }
@@ -149,11 +167,12 @@ var Box = function(tankDimensions) {
   
   this.checkWaterCycleDurations = function(){
     upperWaterLevelProbe.checkCycleDuration(function(cycleTime, description){
-      console.log('sending alert for UPPER waterLevel: cycle time ' + cycleTime + ' is not OK');
+      l.log('warning', 'checkWaterCycleDurations - Alert for UPPER waterLevel: cycle time ' + cycleTime + ' is not OK');
       api.sendAlert('UCYC', cycleTime, description);
     });
     lowerWaterLevelProbe.checkCycleDuration(function(cycleTime, description){
-       api.sendAlert('LCYC', cycleTime, description);
+      l.log('warning', 'checkWaterCycleDurations - Alert for LOWER waterLevel: cycle time ' + cycleTime + ' is not OK');
+      api.sendAlert('LCYC', cycleTime, description);
     });
   }
   
@@ -175,11 +194,13 @@ var Box = function(tankDimensions) {
   
   var controlPump = function(position, status){
     if (stopPump(position, status)){
-      console.log('warn', 'ZOOMMGG overflow !!! => Stopping the pump');
+      l.log('warning', 'controlPump - Overflow => Stopping the pump');
       pump.stop();
+      api.sendLog('warning', 'controlPump - Overflow => Stopping the pump');
     } else {
-      console.log('No overflow => Starting the pump');
+      l.log('info', 'controlPump - No Overflow => Starting the pump');
       pump.start();
+      api.sendLog('info', 'controlPump - No Overflow => Starting the pump');
     }
   }
   
@@ -202,6 +223,7 @@ var Box = function(tankDimensions) {
   }
   
   settings.load();
+  api.sendLog('info', 'Box - Started');
 }
 
 module.exports = Box;

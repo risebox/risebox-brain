@@ -1,4 +1,5 @@
-var b = require('bonescript');
+var b = require('bonescript'),
+    l = require('../utils/logger');
 
 var WaterLevelProbe = function(position, pin){
   this.position = position;
@@ -18,18 +19,20 @@ var WaterLevelProbe = function(position, pin){
     if (this.pin == null) return;
     
     b.pinMode(this.pin, b.INPUT);
-    console.log('I\'m watching ' + this.position + " water level");
+    l.log('info', 'Water level ' + this.position + ' - now watching');
     var that = this;
     
     var handleInterrupt = function(x){
       if (x.attached){
-        console.log('Attachment done at ' + that.position + " level");
+        l.log('info', 'Water level ' + that.position + ' - attachment done');
       } else {
         if (x.value === 0 || x.value === 1){
-          console.log('Value changed at ' + that.position + " level");
+          l.log('info', 'Water level ' + that.position + ' - value changed to ' + x.value);
           that.computeLevelChange(x.value, function(duration){
             callback(duration, that.direction(x.value));
           });
+        } else {
+          l.log('warn', 'Water level ' + that.position + ' - wrong value received');
         }
       }
     };
@@ -39,8 +42,8 @@ var WaterLevelProbe = function(position, pin){
   
   this.computeLevelChange = function(levelValue, callback){
     direction = this.direction(levelValue);
-    now      = parseInt(Date.now() / 1000);
-    lastTime = this.lastLevels[direction];
+    now       = parseInt(Date.now() / 1000);
+    lastTime  = this.lastLevels[direction];
     
     if (lastTime != null){
       duration = (now - lastTime);
@@ -48,7 +51,7 @@ var WaterLevelProbe = function(position, pin){
     }
     else {
       duration = null; 
-      console.log('Last timing water going ' + direction + ' not available : can\'t compute duration');
+      l.log('info', 'Water level ' + this.position + ' - Last timing water going ' + direction + ' not available : can\'t compute duration');
     }
     this.lastLevels[direction] = now;
   }
@@ -60,12 +63,12 @@ var WaterLevelProbe = function(position, pin){
     duration = null;
     
     if (lastTimeUp == null && lastTimeDown == null){
-      console.log("Not enough data: can't check cycle durations");
+      l.log("info", 'Water level ' + this.position + " - Not enough data: can't check cycle durations");
     } else {
       if (lastTimeUp == null) {
         duration = now - lastTimeDown;
         if (duration > this.cycleMaxDurations['empty']) {
-          console.log("ALERT: " + position + "water level is stuck empty, maybe pump is too high");
+          l.log("warning", 'Water level ' + this.position + " - water level is stuck empty, maybe pump is too high");
           callback(duration + this.cycleMaxDurations['full'], "Le bac reste vide : Baissez le flux d'alimentation du bac")
         }
         return;
@@ -73,7 +76,7 @@ var WaterLevelProbe = function(position, pin){
       if (lastTimeDown == null) {
         duration = now - lastTimeUp;
         if (duration > this.cycleMaxDurations['full']){
-          console.log("ALERT: " + position + "water level is stuck full, maybe pump is too low");
+          l.log("warning", 'Water level ' + this.position + " - water level is stuck full, maybe pump is too low");
           callback(duration + this.cycleMaxDurations['empty'], "Le bac ne se vide pas : Augmentez le flux d'alimentation du bac")
         }
         return;
@@ -81,7 +84,7 @@ var WaterLevelProbe = function(position, pin){
       if (lastTimeUp > lastTimeDown) {
         duration = now - lastTimeUp;
         if (duration > this.cycleMaxDurations['full']) {
-          console.log("ALERT: " + position + "water level is stuck full, maybe pump is too low");
+          l.log("warning", 'Water level ' + this.position + " - water level is stuck full, maybe pump is too low");
           callback(duration + this.cycleMaxDurations['empty'], "Le bac ne se vide pas : Augmentez le flux d'alimentation du bac")
         }
         return;
@@ -89,7 +92,7 @@ var WaterLevelProbe = function(position, pin){
       if (lastTimeDown > lastTimeUp) {
         duration = now - lastTimeDown;
         if (duration > this.cycleMaxDurations['empty']) {
-          console.log("ALERT: " + position + "water level is stuck empty, maybe pump is too high");
+          l.log("warning", 'Water level ' + this.position + " - water level is stuck empty, maybe pump is too high");
           callback(duration + this.cycleMaxDurations['full'], "Le bac reste vide : Baissez le flux d'alimentation du bac")
         }
         return;
@@ -99,7 +102,7 @@ var WaterLevelProbe = function(position, pin){
   
   this.stopWatching = function(){
     b.detachInterrupt(pin);
-    console.log('Interrupt detached');
+    l.log("info", 'Water level ' + this.position + ' - stop watching');
   }
   
 }
