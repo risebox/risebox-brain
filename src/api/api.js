@@ -1,7 +1,7 @@
 var querystring = require('querystring'),
     https = require('https');
 
-function post(path, data){
+function post(path, data, success, error){
   postData = querystring.stringify(data);
   
   options = {
@@ -27,14 +27,17 @@ function post(path, data){
     });
     
     res.on('end', function() {
-      console.log(responseString);
-      //var responseObject = JSON.parse(responseString);
-      //success(responseObject);
+      //console.log(responseString);
+      if (success){
+        var responseObject = JSON.parse(responseString);
+        success(responseObject);
+      }
     });
   });
   
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
+    if (error){error(e);}
   });
   
   req.write(postData);
@@ -70,26 +73,37 @@ function get(path, data, success, error){
     
     res.on('end', function() {
       //console.log(responseString);
-      var responseObject = JSON.parse(responseString);
-      success(responseObject);
+      if (success){
+        var responseObject = JSON.parse(responseString);
+        success(responseObject);
+      }
     });
     
   });
   
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
-    error(e);
+    if (error){error(e);}
   });
   
   req.end();
 
 }
 
+/*var requestApi = function (verb, path, data, success, error) {
+  try {
+   this[verb](path, data, success, error)
+  }
+  catch (e) {
+     console.log('error on request API');
+  }
+}*/
 
 var sendMeasure = function (metricKey, value){
   formData = { 'value' : value };
   path = '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/measures';
   post(path, formData);
+  /*requestApi('post', path, formData, );*/
 }
 
 var sendAlert = function (metricKey, value, description){
