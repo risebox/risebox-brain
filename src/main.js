@@ -1,4 +1,6 @@
 var env = require('node-env-file');
+var fs = require('fs');
+
 env('.env');
 
 path = function(pathString) {
@@ -29,3 +31,35 @@ box.watchLowerWaterOverflow();
 box.statusLight();
 
 setInterval(box.checkWaterCycleDurations, 30000);
+
+var gracefullShutdown = function(eventName){
+  console.log(eventName + ' received => shutting down the box');
+  box.shutdown(function(){
+    console.log('Box successfully shut down. Quitting...');
+    process.exit(0);
+  });
+  setTimeout(function() {
+   console.error("Could not close everything in time, forcefully shutting down");
+   process.exit()
+  }, 10*1000);
+};
+
+process.on('SIGTERM', function(){
+   gracefullShutdown('SIGTERM');
+});
+
+process.on('SIGINT', function(){
+   gracefullShutdown('SIGINT');
+});
+
+process.on('SIGABRT', function(){
+   gracefullShutdown('SIGABRT');
+});
+
+process.on('SIGQUIT', function(){
+  gracefullShutdown('SIGQUIT');
+});
+
+fs.watch('/var/log/wtmp', function (event, filename) {
+  gracefullShutdown('VAR_LOG_TMP');
+});

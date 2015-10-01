@@ -12,7 +12,6 @@ checkAndLoadOverlay() {
 }
 
 waitUntilPWMisLoaded() {
-  
   while [ $(find $PWMPolarityFiles | wc -l) -lt 3 ]
   do
     sleep 1
@@ -55,4 +54,4 @@ checkAndLoadOverlay "bspwm_P8_46"
 
 initSettingsFile
 
-node src/main.js
+exec node src/main.js

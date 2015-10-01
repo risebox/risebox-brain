@@ -222,6 +222,16 @@ var Box = function(tankDimensions) {
     });
   }
   
+  this.shutdown = function(callback){
+    api.sendLog('warn', 'Box - Shutdown requested');
+    
+    upperLights.noLights();
+    lowerLights.noLights();
+    fan.stop();
+    
+    callback();
+  }
+  
   settings.load();
   api.sendLog('info', 'Box - Started');
 }
