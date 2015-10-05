@@ -4,7 +4,7 @@ var querystring = require('querystring'),
 var API_URL = 'rbdev-api.herokuapp.com';
 var HEADERS = { 'Accept': 'application/json',
                 'RISEBOX-SECRET': process.env.RISEBOX_SECRET,
-                'RISEBOX-API-CLIENT': 'app' };
+                'RISEBOX-API-CLIENT': 'brain' };
 
 function post(path, data, success, error){
   postData = querystring.stringify(data);

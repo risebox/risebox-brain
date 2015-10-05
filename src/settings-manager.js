@@ -3,6 +3,7 @@ var settingsFile = path('/settings/current-settings.json');
 var settings   = require(settingsFile);
 EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var l = require('./utils/logger');
 
 var SettingsManager = function(api){
   var api = api;
@@ -42,7 +43,12 @@ var SettingsManager = function(api){
   
   function updateSettings(result) {
     result.forEach(addToSettings);
-    fs.writeFile(settingsFile, JSON.stringify(settings, null, 2));
+    fs.writeFile(settingsFile, JSON.stringify(settings, null, 2), function(err){
+      if (err){
+        l.log('error', 'SettingsManager - could not update settings file');
+      }
+      l.log('info', 'SettingsManager - settings file successfully updated');
+    });
   }
   
 }
