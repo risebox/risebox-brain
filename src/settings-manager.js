@@ -1,9 +1,32 @@
 var fs = require('fs');
 var settingsFile = path('/settings/current-settings.json');
-var settings   = require(settingsFile);
+var defaultsFile = path('/settings/default-settings.json');
 EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var l = require('./utils/logger');
+
+function loadJSONfile (filename) {
+	try {
+	  var contents = fs.readFileSync(filename, 'utf8');
+		return JSON.parse(contents);
+	} catch (err) {
+		throw err;	
+	}
+}
+
+var loadOrDeleteSettings = function (filename) {
+	try {
+		var contents = fs.readFileSync(filename, 'utf8');
+		return JSON.parse(contents);
+	} catch (err) {
+		l.log('error', 'SettingsManager - Cannot read ' + filename + ' file: deleting...');
+		fs.unlinkSync(settingsFile);
+		l.log('info', 'SettingsManager - LocalSettings deleted: loading defaults at ' + defaultsFile);
+		return loadJSONfile(defaultsFile);
+	}
+}
+
+var settings = loadOrDeleteSettings(settingsFile);
 
 var SettingsManager = function(api){
   var api = api;
