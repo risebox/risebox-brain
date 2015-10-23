@@ -180,10 +180,10 @@ P9_35 : AIN6, retour analogique de la sonde Ph (milieu du pont diviseur de tensi
 P9_8  : alim de la sonde PH
 P8_12 : Trigger sonde ultrason
 P8_11 : echo sonde ultrasons
-P8_7  : niveau d’eau upper - cycle (fil noir)
-P8_8  : niveau d’eau upper - débordement (fil rouge)
-P8_9  : niveau d’eau lower - cycle (fil noir)
-P8_10 : niveau d’eau lower - débordement (fil rouge)
+P8_9  : niveau d’eau upper - cycle (fil noir)
+P8_10  : niveau d’eau upper - débordement (fil rouge)
+P8_7  : niveau d’eau lower - cycle (fil noir)
+P8_8 : niveau d’eau lower - débordement (fil rouge)
 P8_15 : déclenchement des ventilos
 P8_16 : arret de la pompe
 P8_17 : mise en marche de l'oxygénateur
