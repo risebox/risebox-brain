@@ -1,3 +1,4 @@
 node_modules
+dependencies
 .env
 /settings/current-settings.json
