@@ -62,71 +62,12 @@ date -s "August 24 10:00 UTC 2015"
 
 4. Install temperature probe DS18B20
 
-Create a folder  __/home/risebox/w1.dts__ with the following content:
-
-```bash
-/*
-* Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License version 2 as
-* published by the Free Software Foundation.
-* 
-* Modified  by Russell Senior from the weather cape's DTS file.
-* Minor formatting by C W Rose.
-*/
-/dts-v1/;
-/plugin/;
- 
-/ {
-    compatible = "ti,beaglebone", "ti,beaglebone-black";
-    part-number = "BB-W1";
-    version = "00A0";
- 
-    exclusive-use = "P9.12", "gpio1_28";
- 
-    fragment@0 {
-        target = <&am33xx_pinmux>;
-        __overlay__ {
-             bb_w1_pins: pinmux_bb_w1_pins {
-                 pinctrl-single,pins =  <0x078 0x37>; /* gpmc_ad13.gpio1_13, OMAP_PIN_INPUT_PULLUP | OMAP_MUX_MODE7 - w1-gpio */
-             };
-        };
-    };
- 
-    fragment@1 {
-        target = <&ocp>;
-        __overlay__ {
-            onewire@0 {
-                status          = "okay";
-                compatible      = "w1-gpio";
-                pinctrl-names   = "default";
-                pinctrl-0       = <&bb_w1_pins>;
- 
-                gpios = <&gpio2 28 0>;
-            };
-        };
-    };
-};
+Run install 1W DTS script
 ```
-
-Taper la commande suivante: qui va créer le fichier __ BB-W1-00A0.dtbo__ dans le répertoire
+cd /home/risebox/risebox-brain/lib
+./install-w1-dts.sh
 ```
-dtc -O dtb -o BB-W1-00A0.dtbo -b 0 -@ w1.dts
-```
-
-Copier le fichier dtbo dans /lib/firmware
-```
-cp BB-W1-00A0.dtbo /lib/firmware
-```
-
-Activer le chargement de l’overlay par le capmanager
-```
-echo BB-W1 > /sys/devices/bone_capemgr.9/slots
-```
-
-Vérifier 
-exécuter dmesg et vérifier que le chargement se fait correctement
+Check with __dmesg__ et that loading is correct
 
 ```
 [  255.761072] bone-capemgr bone_capemgr.9: part_number 'BB-W1', version 'N/A'
@@ -139,12 +80,12 @@ exécuter dmesg et vérifier que le chargement se fait correctement
 [  255.774000] bone-capemgr bone_capemgr.9: slot #7: #2 overlays
 ```
 
-Vérifier qu’un répertoire 28-* se trouve dans __/sys/devices/w1_bus_master1__
+Also check that folder 28-* is in __/sys/devices/w1_bus_master1__
 ```
 ls /sys/devices/w1_bus_master1/
 ```
 
-Tutos interessants sur cette partie (1Wire, Device Tree, Kernel, Capemanager...)
+Interesting ressources for this part (1Wire, Device Tree, Kernel, Capemanager...)
 http://www.beerfactory.org/beaglebone-black-releve-de-temperature-sur-bus-1-wire/
 http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
 https://github.com/derekmolloy/boneDeviceTree/tree/master/docs
