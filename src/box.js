@@ -30,8 +30,8 @@ var Box = function(tankDimensions) {
   
   var controllers = require('./controllers/controllers');
   
-  var upperLights = new controllers.LightController({blue: 'P8_36', red: 'P8_45', white: 'P8_46'});
-  var lowerLights = new controllers.LightController({blue: 'P9_29', red: 'P9_31', white: 'P9_42'});
+  var upperLights = new controllers.LightController({blue: 'P9_29', red: 'P9_31', white: 'P9_42'});
+  var lowerLights = new controllers.LightController({blue: 'P8_36', red: 'P8_45', white: 'P8_46'});
   var pump        = new controllers.PumpController('P8_16');
   var fan         = new controllers.FanController('P8_15');
   
