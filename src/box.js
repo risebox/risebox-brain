@@ -137,6 +137,7 @@ var Box = function(tankDimensions) {
         now = parseInt(Date.now()/1000);
         lastLowerFlush = lowerWaterLevelProbe.lastFlushTime();
         if (now - lastLowerFlush < 60){
+          l.log('info', 'Water Volume - Time to compute tank water volume');
           waterVolumeProbe.getVolume(function(volume){
             api.sendMeasure('WVOL', volume);
           }, function(error){
@@ -154,6 +155,7 @@ var Box = function(tankDimensions) {
         now = parseInt(Date.now()/1000);
         lastUpperFlush = upperWaterLevelProbe.lastFlushTime();
         if (now - lastUpperFlush < 60){
+          l.log('info', 'Water Volume - Time to compute tank water volume');
           waterVolumeProbe.getVolume(function(volume){
             api.sendMeasure('WVOL', volume);
           }, function(error){
