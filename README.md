@@ -42,7 +42,6 @@ Your box can now be ssh-ed like this :
 ssh risebox-[box key].local -l root
 ```
 
-
 2. Update system & Kernel
 ```
 sudo apt-get update
@@ -60,13 +59,28 @@ sudo reboot
 date -s "August 24 10:00 UTC 2015"
 ```
 
-4. Install temperature probe DS18B20
+4. Install Risebox Software
+```
+cd /home/risebox
+git clone https://github.com/risebox/risebox-brain
+./lib/install_dependencies.sh 
+npm install
+```
 
-Run install 1W DTS script
+Also create a __.env__ file in __/home/risebox/risebox-brain__
+with following content:
+```bash
+RISEBOX_KEY=lab1
+RISEBOX_SECRET=token2
+MOCK_SENSORS=false
+MOCK_API=false
+LOG_LEVEL=info
 ```
-cd /home/risebox/risebox-brain/lib
-./install-w1-dts.sh
-```
+
+5. Install temperature probe DS18B20
+
+This is now part of install_dependencies.sh script
+
 Check with __dmesg__ et that loading is correct
 
 ```
@@ -112,6 +126,8 @@ la formule est Ph = x.value * 5 * 3,5 + offset (mesuré avec la sonde bleu à 0,
 
 http://www.blaess.fr/christophe/2013/07/06/beaglebone-black-et-pwm/
 
+run node console
+
 var b = require('bonescript');
 b.analogWrite('P9_14', 0.1, 2000, printJSON);
 b.analogWrite('P9_16', 0.1, 2000, printJSON);
@@ -140,7 +156,7 @@ Pas besoin de désactiver le HDMI: it works.
 
 Branchement classique. On utilise des pins GPIO libres (ex : P8_7 et P8_8), et on met une resistance 10KOhm entre le 3.3V et la GPIO.
 
-Code example du site beagleboard : 
+Code example du site beagleboard :
 
 9. Setup Dev environment
  * Copy public & private rsa keys for brain-dev (available in vault)
