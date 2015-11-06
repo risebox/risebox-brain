@@ -22,3 +22,4 @@ cp -r ../lib/hcsr04-master ./hcsr04-master
 cd hcsr04-master
 make
 make install
+sudo sh -x ./install-driver.sh
