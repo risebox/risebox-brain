@@ -17,3 +17,8 @@ cd ./dependencies/Adafruit_Python_DHT
 sudo apt-get install build-essential python-dev python-openssl
 sudo python setup.py install
 
+cd $ROOT_DIR/dependencies
+cp -r ../lib/hcsr04-master ./hcsr04-master
+cd hcsr04-master
+make
+make install
