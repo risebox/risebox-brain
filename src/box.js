@@ -21,10 +21,10 @@ var Box = function(tankDimensions) {
   var sensors = require('./sensors/sensors');
   var airProbe                 = new sensors.AirProbe("P9_15"),
       waterTempProbe           = new sensors.WaterTempProbe("P9_12"),
-      upperWaterLevelProbe     = new sensors.WaterLevelProbe('UPPER', 'P8_7'),
-      upperWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', 'P8_8'),
-      lowerWaterLevelProbe     = new sensors.WaterLevelProbe('LOWER', 'P8_9'),
-      lowerWaterOverflowProbe  = new sensors.WaterOverflowProbe('LOWER', 'P8_10'),
+      upperWaterLevelProbe     = new sensors.WaterLevelProbe('UPPER', 'P8_10'),
+      upperWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', 'P8_9'),
+      lowerWaterLevelProbe     = new sensors.WaterLevelProbe('LOWER', 'P8_7'),
+      lowerWaterOverflowProbe  = new sensors.WaterOverflowProbe('LOWER', 'P8_8'),
       waterVolumeProbe         = new sensors.WaterVolumeProbe(dimensions),
       phProbe                  = new sensors.PHProbe('P9_23', 'P9_36');
   

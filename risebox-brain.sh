@@ -27,7 +27,7 @@ initSettingsFile() {
   fi
 }
 
-cd /var/lib/cloud9/risebox-brain
+cd /home/risebox/risebox-brain
 
 checkAndLoadOverlay "cape-bone-iio"
 
