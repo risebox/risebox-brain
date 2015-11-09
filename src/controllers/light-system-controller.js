@@ -39,14 +39,16 @@ var LightSystemController = function(powerPin, lightControllersPins){
     l.log('info', 'Lights - pausing lights');
     var pausedControllersCount = 0;
     var that = this;
-    this.lightControllers.forEach(function(controller){
-      controller.noLights(function(){
+    for (var i=0; i<this.lightControllers.length; i++) {  
+      this.lightControllers[i].noLights(function(){
         pausedControllersCount++;
         if (pausedControllersCount == that.lightControllers.length) {
-          callback();
+          if (callback != null){
+            callback();
+          }
         }
       });
-    });
+    }
   }
 
   this.stop = function(){
