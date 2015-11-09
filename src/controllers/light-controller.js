@@ -38,6 +38,10 @@ var LightController = function(pins){
         });
       });
       currentLights = [blue, red, white];
+    } else {
+      if (callback != null) {
+        callback();
+      }
     }
   }
 

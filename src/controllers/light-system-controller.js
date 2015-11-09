@@ -52,7 +52,10 @@ var LightSystemController = function(powerPin, lightControllersPins){
   this.stop = function(){
     l.log('info', 'Lights - stopping lights');
     if (this.powerOn == null || this.powerOn == true) {
-      this.pause(this.switchPowerOff);
+      var that = this;
+      this.pause(function(){
+        that.switchPowerOff();
+      });
     }
   }
 
@@ -83,8 +86,7 @@ var LightSystemController = function(powerPin, lightControllersPins){
   this.switchPowerOff = function() {
     l.log('info', 'Lights - powerOff');
     var that = this; 
-    l.log('info', this.powerPin);
-    b.digitalWrite('P8_17', b.LOW, function(x){
+    b.digitalWrite(this.powerPin, b.LOW, function(x){
       l.log('info', JSON.stringify(x));
       that.powerOn = false;
     });
