@@ -28,9 +28,9 @@ var LightController = function(pins){
     if(anythingToChange(blue, red, white)) {
       l.log('info', 'Lights : change recipe to B ' + blue + ' R ' + red + ' W ' + white);
       var colorChangeCount = 0;
-      fade(bluePin, currentLights[0], blue, function() {
-        fade(redPin, currentLights[1], red, function() {
-          fade(whitePin, currentLights[2], white, function() {
+      b.analogWrite(bluePin, blue, 2000, function() {
+        b.analogWrite(redPin, red, 2000, function() {
+          b.analogWrite(whitePin, white, 2000, function() {
             if (callback != null) {
               callback();
             }
@@ -45,7 +45,28 @@ var LightController = function(pins){
     }
   }
 
-  function fade(pin, from, to, callback){
+  function fadeLights(blue, red, white, callback) {
+    if(anythingToChange(blue, red, white)) {
+      l.log('info', 'Lights : change recipe to B ' + blue + ' R ' + red + ' W ' + white);
+      var colorChangeCount = 0;
+      fade(bluePin, blue, currentLights[0], 2000, function() {
+        fade(redPin, red,  currentLights[0], 2000, function() {
+          fade(whitePin, white,  currentLights[0], 2000, function() {
+            if (callback != null) {
+              callback();
+            }
+          });
+        });
+      });
+      currentLights = [blue, red, white];
+    } else {
+      if (callback != null) {
+        callback();
+      }
+    }
+  }
+
+  function fade(pin, from, to, freq, callback){
     if (from == to) {
       callback()
     } else {
