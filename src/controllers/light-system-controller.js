@@ -1,30 +1,33 @@
 var b  = require('bonescript'),
     fs = require('fs'),
     l  = require('../utils/logger'),
-    LightController = require('light-controller');
+    LightController = require('./light-controller');
 
 var LightSystemController = function(powerPin, lightControllersPins){
   this.powerPin = powerPin;
-  b.pinMode(this.powerPin, b.INPUT);
+  b.pinMode(this.powerPin, b.OUTPUT);
   this.powerOn = null;
   this.lightControllers = [];
-  lightControllersPins.forEach(function(controllerPins) {
-    lightControllers.push(new LightController(controllerPins));
-  });
+  for (var i=0; i<lightControllersPins.length; i++) {  
+    this.lightControllers.push(new LightController(lightControllersPins[i]));
+  };
 
   this.growLights = function(recipies){
+    l.log('info', 'Lights - grow lights');
     i = 0;
-    ensurePowerIsOn(function(){
-      lightControllers.forEach(function(controller){
-        controller.growLights().apply(this, recipies[i]);
+    var that = this; 
+    this.ensurePowerIsOn(function(){
+      that.lightControllers.forEach(function(controller){
+        controller.growLights.apply(this, recipies[i]);
         i++;
       });
     });
   }
 
   this.sightLights = function(){
+    l.log('info', 'Lights - sight lights');
     i = 0;
-    ensurePowerIsOn(function(){
+    this.ensurePowerIsOn(function(){
       lightControllers.forEach(function(controller){
         controller.sightLights();
         i++;
@@ -36,10 +39,10 @@ var LightSystemController = function(powerPin, lightControllersPins){
     l.log('info', 'Lights - pausing lights');
     var pausedControllersCount = 0;
     var that = this;
-    lightControllers.forEach(function(controller){
+    this.lightControllers.forEach(function(controller){
       controller.noLights(function(){
         pausedControllersCount++;
-        if (pausedControllersCount == that.lightControllers.size()) {
+        if (pausedControllersCount == that.lightControllers.length) {
           callback();
         }
       });
@@ -49,24 +52,42 @@ var LightSystemController = function(powerPin, lightControllersPins){
   this.stop = function(){
     l.log('info', 'Lights - stopping lights');
     if (this.powerOn == null || this.powerOn == true) {
-      this.pause(powerOff);
+      this.pause(this.switchPowerOff);
     }
   }
 
-  function ensurePowerIsOn(callback){
+  this.ensurePowerIsOn = function(callback){
+    l.log('info', 'Lights - ensurePowerIsOn');
+    l.log('info', 'this.powerOn' + this.powerOn);
     if (this.powerOn == null || this.powerOn == false) {
+      l.log('info', 'should switch power to on');
+      var that = this;
       this.pause(function(){
-        powerOn(callback);
+        that.switchPowerOn(callback);
       });
+    } else {
+      callback();
     }
-  });
-
-  function powerOn(callback){
-    b.digitalWrite(this.powerPin, b.HIGH, callback);
   }
 
-  function powerOff(){
-    b.digitalWrite(this.powerPin, b.LOW);
+  this.switchPowerOn = function(callback){
+    l.log('info', 'Lights - powerOn');
+    var that = this;
+    b.digitalWrite(this.powerPin, b.HIGH, function(x){
+      l.log('info', JSON.stringify(x));
+      that.powerOn = true;
+      callback();
+    });
+  }
+
+  this.switchPowerOff = function() {
+    l.log('info', 'Lights - powerOff');
+    var that = this; 
+    l.log('info', this.powerPin);
+    b.digitalWrite('P8_17', b.LOW, function(x){
+      l.log('info', JSON.stringify(x));
+      that.powerOn = false;
+    });
   }
 
   function anythingToChange(blue, red, white){
