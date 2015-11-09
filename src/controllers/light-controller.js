@@ -45,6 +45,24 @@ var LightController = function(pins){
     }
   }
 
+  function fade(pin, from, to, callback){
+    if (from == to) {
+      callback()
+    } else {
+      var step = from;
+      var fader = setInterval(function(){
+        if (to - step > 0.01) {
+          step = step + 0.01;
+          analogWrite(pin, step, 2000)
+        } else {
+          analogWrite(pin, to, 2000, callback);
+          clearInterval(fader);
+          callback();
+        }
+      },30);
+    }
+  }
+
   function anythingToChange(blue, red, white){
     newLights = [blue, red, white];
     var i = newLights.length;
