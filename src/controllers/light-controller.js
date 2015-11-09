@@ -53,9 +53,9 @@ var LightController = function(pins){
       var fader = setInterval(function(){
         if (to - step > 0.01) {
           step = step + 0.01;
-          analogWrite(pin, step, 2000)
+          b.analogWrite(pin, step, 2000)
         } else {
-          analogWrite(pin, to, 2000, callback);
+          b.analogWrite(pin, to, 2000, callback);
           clearInterval(fader);
           callback();
         }
