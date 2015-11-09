@@ -28,9 +28,9 @@ var LightController = function(pins){
     if(anythingToChange(blue, red, white)) {
       l.log('info', 'Lights : change recipe to B ' + blue + ' R ' + red + ' W ' + white);
       var colorChangeCount = 0;
-      b.analogWrite(bluePin, blue, 2000, function() {
-        b.analogWrite(redPin, red, 2000, function() {
-          b.analogWrite(whitePin, white, 2000, function() {
+      fade(bluePin, currentLights[0], blue, function() {
+        fade(redPin, currentLights[1], red, function() {
+          fade(whitePin, currentLights[2], white, function() {
             if (callback != null) {
               callback();
             }
