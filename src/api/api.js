@@ -3,8 +3,9 @@ var querystring = require('querystring'),
 
 var API_URL = 'rbdev-api.herokuapp.com';
 var HEADERS = { 'Accept': 'application/json',
-                'RISEBOX-SECRET': process.env.RISEBOX_SECRET,
-                'RISEBOX-API-CLIENT': 'brain' };
+                'RISEBOX-USER-EMAIL': process.env.RISEBOX_USER_EMAIL,
+                'RISEBOX-USER-SECRET': process.env.RISEBOX_USER_SECRET
+              };
 
 function post(path, data, success, error){
   postData = querystring.stringify(data);
@@ -100,31 +101,31 @@ function get(path, data, success, error){
 
 var sendMeasure = function (metricKey, value){
   formData = { 'value' : value };
-  path = '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/measures';
+  path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/metrics/' + metricKey + '/measures';
   post(path, formData);
   /*requestApi('post', path, formData, );*/
 }
 
 var sendAlert = function (metricKey, value, description){
   formData = { 'value' : value, 'description' : description };
-  path = '/api/devices/' + process.env.RISEBOX_KEY + '/metrics/' + metricKey + '/alerts';
+  path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/metrics/' + metricKey + '/alerts';
   post(path, formData);
 }
 
 var sendLog = function (level, msg){
   var now = new Date().getTime();
   formData = { 'level': level, 'body': msg, 'logged_at': parseInt(now/1000)};
-  path = '/api/devices/' + process.env.RISEBOX_KEY + '/logs';
+  path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/logs';
   post(path, formData);
 }
 
 var getAllSettings = function (success, error) {
-  path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
+  path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/settings';
   get(path, { 'mode' : 'full' }, success, error);
 }
 
 var getDeltaSettings = function (success, error) {
-  path = '/api/devices/' + process.env.RISEBOX_KEY + '/settings';
+  path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/settings';
   get(path, { 'mode' : 'delta' }, success, error);
 }
 
