@@ -222,7 +222,7 @@ iwconfig
 vi /etc/network/interfaces
 ```
 
-* Uncomment these 3 lines & put edit your network's __SSID__ and __password__
+* Uncomment these 4 lines & edit your network's __SSID__ and __password__
 ```
 # WiFi Example
 #auto wlan0
