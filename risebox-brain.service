@@ -4,8 +4,9 @@ After=syslog.target network.target
 
 [Service] 
 Type=simple
-WorkingDirectory=/var/lib/cloud9/risebox-brain
-ExecStart=/var/lib/cloud9/risebox-brain/risebox-brain.sh 
+WorkingDirectory=/home/risebox/risebox-brain
+ExecStart=/home/risebox/risebox-brain/risebox-brain.sh 
+Restart=always
 
 [Install] 
 WantedBy=multi-user.target
