@@ -278,13 +278,17 @@ Pour vérifier que le HDMI est bien désactivé, faire un __cat /sys/devices/bon
 
 * Create link for systemd
 ```
-ln /lib/systemd/risebox-brain.service $RISEBOX_HOME/risebox-brain.service
+ln $RISEBOX_HOME/risebox-brain/risebox-brain.service /lib/systemd/risebox-brain.service 
 ```
 
-* Make systemd reload the configuration file, start the service immediately (helps to see if the service is functioning properly) and enable the unit files specified in the command line.
+* Enable the unit files on the original service file (not the link see [here](https://bugzilla.redhat.com/show_bug.cgi?id=955379)).
+```bash
+systemctl enable $RISEBOX_HOME/risebox-brain/risebox-brain.service
+```
+
+* Start the service
 ```bash
 systemctl start risebox-brain.service
-systemctl enable risebox-brain.service
 ```
 
 The following commands may be usefull
@@ -298,7 +302,7 @@ systemctl status risebox-brain.service
 To run the brain program manually, use __risebox-brain.sh__ script
 
 ```bash
-cd /var/lib/cloud9/risebox-brain
+cd /home/risebox/risebox-brain
 ./risebox-brain.sh
 ```
 
