@@ -34,7 +34,7 @@ Check Ethernet is working and that you have Internet connection by following [th
 Then change the BBB hostname by editing /etc/hosts and /etc/hostname files. Do not use "." in the name.
 Classic naming is risebox-[box key].
 
-Then reboot.
+Then reboot
 
 Your box can now be ssh-ed like this : 
 
@@ -222,7 +222,7 @@ iwconfig
 vi /etc/network/interfaces
 ```
 
-* Uncomment these 3 lines & put edit your network's __SSID__ and __password__
+* Uncomment these 4 lines & edit your network's __SSID__ and __password__
 ```
 # WiFi Example
 #auto wlan0
