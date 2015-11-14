@@ -1,0 +1,89 @@
+Version 0.1
+ - Merge branch 'master' of https://github.com/risebox/risebox-brain
+ - fix api sending time measure is taken
+ - dummmy change to check github org repo
+ - Update README.md
+ - Update README.md
+ - autorestart service if it crashes
+ - 2 ways of changing lights
+ - correct stupidity
+ - test with fade
+ - add fader code, not wired in yet
+ - fix night hours again
+ - fix night hours
+ - fix light system controller
+ - introduce lights system controller
+ - new api auth
+ - updated pwm wiring
+ - log water volume trigger
+ - update path for hcr script
+ - update dependencies for hcsr04
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - changed script path
+ - add install software
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - Rename install scripts
+ - Update README.md
+ - :wqMerge branch 'master' of github.com:risebox/risebox-brain
+ - add Adafruit Python Script to dependencies install
+ - Update README.md
+ - add 1wire install libs
+ - hardened settings file access
+ - protect settings file write
+ - gracefull shutdown
+ - logs & catch errors
+ - merge
+ - prevent api errors from freezing brain
+ - add RISEBOX-API-CLIENT header param
+ - correct conflicts between analog pin numbers
+ - update logs api calls to match server
+ - xMerge branch 'master' of github.com:risebox/risebox-brain
+ - wip log and error handling
+ - updated wiring
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - added lower water level & fix pump start/stop
+ - add PH power pin
+ - status led wiring
+ - Update Readme.md with PWM pins
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - preload lights pwm overlays
+ - added hostname change procedure to readme
+ - Update README.md
+ - :xMerge branch 'master' of github.com:risebox/risebox-brain
+ - add service to start brain when board starts
+ - Update README.md
+ - untested silent mode
+ - fan controllers
+ - handle multiple overflow sensors
+ - overflow sensor controls pump
+ - updated wiring on readme
+ - heartbeat and upper light system ok
+ - command lights with device settings
+ - refactor settings to settings manager class
+ - refactor file loading and tree structure
+ - new folder structure
+ - update README.md
+ - load and update settings file
+ - load capes and start with a shell script
+ - fix var problem between water level and ph probes. Mind the that
+ - ph and wip device settings
+ - merge Merge branch 'master' of github.com:risebox/risebox-brain
+ - overlay are loaded at startup time
+ - pwm precisions
+ - tank volume measures - should work
+ - ater level probesmonitoring
+ - call api for cycle durations
+ - compute water levels cycle duration
+ - water level sensor detects level change
+ - add dht22 sensor
+ - refactor and mock API
+ - make sensors mockable  and api wip
+ - refactor api and sensors to node modules
+ - call risebox-api for the first time
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - first loop measuring water-temp
+ - add RISEBOX_HOME env var in Readme
+ - Update readme with install & dev env setup
+ - Initial commit
+ - Initial commit
+
