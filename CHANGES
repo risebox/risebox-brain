@@ -1,3 +1,8 @@
+Version 0.2:
+ - brain auto upgrade version from API
+ - add bump_version script
+ - Added VERSION and CHANGES files, Version bump to v0.1
+
 Version 0.1
  - Merge branch 'master' of https://github.com/risebox/risebox-brain
  - fix api sending time measure is taken
