@@ -1,6 +1,7 @@
 var fs = require('fs'),
     b = require('bonescript'),
-    l = require('./utils/logger');
+    l = require('./utils/logger'),
+    exec = require('child_process').exec;
 
 var Box = function(tankDimensions) {
 
@@ -9,6 +10,13 @@ var Box = function(tankDimensions) {
   var api = require(apiPath());
   var SettingsManager = require('./settings-manager');
   var settings = new SettingsManager(api);
+  var brainVersion = null;
+
+  fs.readFile('./VERSION', 'utf8', function(err, data){
+    if(!err){
+      brainVersion = data;
+    };
+  });
 
   settings.on('change', function(){
     l.log('info', 'SettingsManager - Settings were changed');
@@ -79,6 +87,32 @@ var Box = function(tankDimensions) {
         fan.stop();
       }
     }
+
+    if (s.brain_update == 1){
+      if (brainVersion == s.brain_version){
+        l.log('info', 'Brain succesfully updated to version ' + brainVersion + ': will tell server');
+        api.brainUpdated(brainVersion);
+      } else {
+        if (s.brain_version != null){
+          l.log('info', 'Brain update requested to version' + s.brain_version + ' (currently v' + brainVersion + ')');
+          updateBrain(s.brain_version);
+        } //else s.brain_version == null => default file : Do Not update
+      }
+    }
+
+  }
+
+  function updateBrain(version){
+    api.sendLog('info', 'Box - Updating to version ' + version);
+    var cmd = './update-brain.sh v' + version;
+    exec(cmd, function(error, stdout, stderr) {
+      if (error == null) {
+        api.sendLog('info', 'Box - Brain updated! will now reboot');
+        box.shutdown();
+      } else {
+        l.log('error', 'Could not update brain');
+      }
+    }});
   }
 
   function apiPath(){

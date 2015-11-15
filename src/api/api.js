@@ -132,10 +132,15 @@ var getDeltaSettings = function (success, error) {
   get(path, { 'mode' : 'delta' }, success, error);
 }
 
+var brainUpdated = function (version) {
+  formData = { 'version': version, 'brain_upgraded_at': nowAsInteger() };
+  path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/brain_upgrade';
+  post(path, formData);
+}
 
 module.exports.sendMeasure       = sendMeasure;
 module.exports.sendAlert         = sendAlert;
 module.exports.sendLog           = sendLog;
 module.exports.getAllSettings    = getAllSettings;
 module.exports.getDeltaSettings  = getDeltaSettings;
-
+module.exports.brainUpdated      = brainUpdated;

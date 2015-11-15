@@ -12,5 +12,7 @@
   "day_hours": 7,
   "day_minutes": 0,
   "night_hours": 21,
-  "night_minutes": 0
+  "night_minutes": 0,
+  "brain_update": 0,
+  "brain_version": null
 }
