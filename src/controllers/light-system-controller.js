@@ -8,14 +8,14 @@ var LightSystemController = function(powerPin, lightControllersPins){
   b.pinMode(this.powerPin, b.OUTPUT);
   this.powerOn = null;
   this.lightControllers = [];
-  for (var i=0; i<lightControllersPins.length; i++) {  
+  for (var i=0; i<lightControllersPins.length; i++) {
     this.lightControllers.push(new LightController(lightControllersPins[i]));
   };
 
   this.growLights = function(recipies){
     l.log('info', 'Lights - grow lights');
     i = 0;
-    var that = this; 
+    var that = this;
     this.ensurePowerIsOn(function(){
       that.lightControllers.forEach(function(controller){
         controller.growLights.apply(this, recipies[i]);
@@ -39,7 +39,7 @@ var LightSystemController = function(powerPin, lightControllersPins){
     l.log('info', 'Lights - pausing lights');
     var pausedControllersCount = 0;
     var that = this;
-    for (var i=0; i<this.lightControllers.length; i++) {  
+    for (var i=0; i<this.lightControllers.length; i++) {
       this.lightControllers[i].noLights(function(){
         pausedControllersCount++;
         if (pausedControllersCount == that.lightControllers.length) {
@@ -87,7 +87,7 @@ var LightSystemController = function(powerPin, lightControllersPins){
 
   this.switchPowerOff = function() {
     l.log('info', 'Lights - powerOff');
-    var that = this; 
+    var that = this;
     b.digitalWrite(this.powerPin, b.LOW, function(x){
       l.log('info', JSON.stringify(x));
       that.powerOn = false;

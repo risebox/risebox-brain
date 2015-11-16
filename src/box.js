@@ -29,18 +29,14 @@ var Box = function(tankDimensions) {
   var sensors = require('./sensors/sensors');
   var airProbe                 = new sensors.AirProbe("P9_15"),
       waterTempProbe           = new sensors.WaterTempProbe("P9_12"),
-      upperWaterLevelProbe     = new sensors.WaterLevelProbe('UPPER', 'P8_10'),
-      upperWaterOverflowProbe  = new sensors.WaterOverflowProbe('UPPER', 'P8_9'),
-      lowerWaterLevelProbe     = new sensors.WaterLevelProbe('LOWER', 'P8_7'),
-      lowerWaterOverflowProbe  = new sensors.WaterOverflowProbe('LOWER', 'P8_8'),
-      waterVolumeProbe         = new sensors.WaterVolumeProbe(dimensions),
       phProbe                  = new sensors.PHProbe('P9_23', 'P9_36');
 
   var controllers = require('./controllers/controllers');
-
   var lights      = new controllers.LightSystemController('P8_17', [  {blue: 'P8_36', red: 'P8_45', white: 'P8_46'},
                                                                       {blue: 'P9_29', red: 'P9_31', white: 'P9_42'}  ]);
-  var pump        = new controllers.PumpController('P8_16');
+  var waterCircuit = new controllers.WaterSystemController('P8_16', tankDimensions, {lower: 'P8_7', upper: 'P8_10'},
+                                                                                   {lower: 'P8_8', upper: 'P8_9'});
+
   var fan         = new controllers.FanController('P8_15');
 
   function applySettingsChanges(s){
@@ -76,9 +72,10 @@ var Box = function(tankDimensions) {
 
     if (now < silentDate){
       l.log('info', 'SettingsManager - Applying silent Mode');
-      pump.stop();
+      waterCircuit.pause();
       fan.stop();
     } else {
+      waterCircuit.endPause();
       if (currentHourlyRatio <= s.fan_duty_ratio){
         l.log('info', 'SettingsManager - Fans on duty');
         fan.start();
@@ -150,89 +147,27 @@ var Box = function(tankDimensions) {
     });
   }
 
-  this.watchUpperWaterLevel = function(){
-    upperWaterLevelProbe.watchCycle(function(cycleTime, direction){
-      if (direction == 'down'){
-        now = parseInt(Date.now()/1000);
-        lastLowerFlush = lowerWaterLevelProbe.lastFlushTime();
-        if (now - lastLowerFlush < 60){
-          l.log('info', 'Water Volume - Time to compute tank water volume');
-          waterVolumeProbe.getVolume(function(volume){
-            api.sendMeasure('WVOL', volume);
-          }, function(error){
-            api.sendLog('error', error);
-          });
-        }
-      }
-      api.sendMeasure('UCYC', cycleTime);
-    });
+  var metricKeyFromPosition = function(position){
+    apiKey = (position == 'UPPER') ? 'UCYC' : 'LCYC';
+    return apiKey
   }
 
-  this.watchLowerWaterLevel = function(){
-    lowerWaterLevelProbe.watchCycle(function(cycleTime, direction){
-      if (direction == 'down'){
-        now = parseInt(Date.now()/1000);
-        lastUpperFlush = upperWaterLevelProbe.lastFlushTime();
-        if (now - lastUpperFlush < 60){
-          l.log('info', 'Water Volume - Time to compute tank water volume');
-          waterVolumeProbe.getVolume(function(volume){
-            api.sendMeasure('WVOL', volume);
-          }, function(error){
-            api.sendLog('error', error);
-          });
-        }
-      }
-      api.sendMeasure('LCYC', cycleTime);
-    });
+  this.sendWaterCycleMeasure = function(position, duration){
+    api.sendMeasure(metricKeyFromPosition(position), duration);
   }
 
-  this.checkWaterCycleDurations = function(){
-    upperWaterLevelProbe.checkCycleDuration(function(cycleTime, description){
-      l.log('warning', 'checkWaterCycleDurations - Alert for UPPER waterLevel: cycle time ' + cycleTime + ' is not OK');
-      api.sendAlert('UCYC', cycleTime, description);
-    });
-    lowerWaterLevelProbe.checkCycleDuration(function(cycleTime, description){
-      l.log('warning', 'checkWaterCycleDurations - Alert for LOWER waterLevel: cycle time ' + cycleTime + ' is not OK');
-      api.sendAlert('LCYC', cycleTime, description);
-    });
+  this.sendWaterVolumeMeasure = function(volume){
+    api.sendMeasure('WVOL', volume);
   }
 
-  var overFlowStatuses = {};
-
-  var stopPump = function(position, status){
-    overFlowStatuses[position] = status;
-
-    var stopPump = false;
-    for (var key in overFlowStatuses) {
-      stopPump = (overFlowStatuses[key] == 'overflow');
-      if (stopPump == true){
-        break;
-      }
-    }
-
-    return stopPump;
+  this.raiseOverflowAlert = function(position){
+    api.sendLog('warning', 'controlPump - Overflow on ' + position + ' bed => Stopping the pump');
+    // TODO
+    // api.sendAlert(metricKeyFromPosition(position, duration, description));
   }
 
-  var controlPump = function(position, status){
-    if (stopPump(position, status)){
-      l.log('warning', 'controlPump - Overflow => Stopping the pump');
-      pump.stop();
-      api.sendLog('warning', 'controlPump - Overflow => Stopping the pump');
-    } else {
-      l.log('info', 'controlPump - No Overflow => Starting the pump');
-      pump.start();
-      api.sendLog('info', 'controlPump - No Overflow => Starting the pump');
-    }
-  }
-
-  this.watchUpperWaterOverflow = function(){
-    upperWaterOverflowProbe.getStatus(controlPump);
-    upperWaterOverflowProbe.watchOverflow(controlPump);
-  }
-
-  this.watchLowerWaterOverflow = function(){
-    lowerWaterOverflowProbe.getStatus(controlPump);
-    lowerWaterOverflowProbe.watchOverflow(controlPump);
+  this.raiseStuckLevelAlert = function(position, duration, description){
+    api.sendAlert(metricKeyFromPosition(position), duration, description);
   }
 
   this.sendPHMeasure = function() {
@@ -254,6 +189,10 @@ var Box = function(tankDimensions) {
 
   settings.load();
   api.sendLog('info', 'Box - Started');
+
+  waterCircuit.watchWaterLevels(sendWaterCycleMeasure, sendWaterVolumeMeasure);
+  waterCircuit.watchOverflows(raiseOverflowAlert);
+  waterCircuit.detectStuckWaterLevel(raiseStuckLevelAlert,30000);
 }
 
 module.exports = Box;
