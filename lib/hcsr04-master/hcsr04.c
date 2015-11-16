@@ -32,7 +32,7 @@ int main(void) {
 
 	/* Get measurements */
 	int i = 0;
-	while (i++ < 20) {
+	while (i++ < 3) {
 		
 		// Wait for the PRU interrupt
 		prussdrv_pru_wait_event (PRU_EVTOUT_0);

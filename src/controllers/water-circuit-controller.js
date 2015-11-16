@@ -1,21 +1,22 @@
 var b              = require('bonescript'),
-    controllers    = require('./controllers'),
+    PumpController = require('./pump-controller'),
+    l              = require('../utils/logger'),
     sensors        = require('../sensors/sensors');
 
 var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overflowPins){
-  var pump   = new controllers.PumpController(pumpPin);
-  var volume = new sensors.WaterVolumeProbe(tankDimensions);
+  var pump   = new PumpController(pumpPin);
+  var volumeProbe = new sensors.WaterVolumeProbe(tankDimensions);
 
-  this.levelSensors = [];
+  var levelSensors = [];
   levelKeys = Object.keys(levelPins);
   for (var i=0; i<levelKeys.length; i++) {
-    this.levelSensors.push(new sensors.WaterLevelProbe(levelKeys[i].toUpperCase(), levelPins[levelKeys[i]]));
+    levelSensors.push(new sensors.WaterLevelProbe(levelKeys[i].toUpperCase(), levelPins[levelKeys[i]]));
   };
 
-  this.overflowSensors = [];
+  var overflowSensors = [];
   overflowKeys = Object.keys(overflowPins);
   for (var i=0; i<overflowKeys.length; i++) {
-    this.overflowSensors.push(new sensors.WaterOverflowProbe(overflowKeys[i].toUpperCase(), overflowPins[overflowKeys[i]]));
+    overflowSensors.push(new sensors.WaterOverflowProbe(overflowKeys[i].toUpperCase(), overflowPins[overflowKeys[i]]));
   };
 
   var setPinMode = function(){
@@ -23,20 +24,21 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
   }
 
   var otherWaterlevelProbe = function(probe){
-    position = this.levelSensors.indexOf(probe);
+    position = levelSensors.indexOf(probe);
     otherPosition = (position == 1 ? 0 : 1)
-    return this.levelSensors[otherPosition];
+    return levelSensors[otherPosition];
   }
 
   this.watchWaterLevels = function(waterCycleCb, waterVolumeCb){
-    this.levelSensors.forEach(function(sensor){
+    levelSensors.forEach(function(sensor){
       sensor.watchCycle(function(cycleTime, direction){
         if (direction == 'down'){
           now = parseInt(Date.now()/1000);
           lastOtherFlush = otherWaterlevelProbe(sensor).lastFlushTime();
           if (now - lastOtherFlush < 60){
             l.log('info', 'Water Volume - Time to compute tank water volume');
-            waterVolumeProbe.getVolume(function(volume){
+            volumeProbe.getVolume(function(volume){
+              l.log('info', 'volume is '+volume);
               waterVolumeCb('WVOL', volume);
             }, function(error){
               l.log('error', error);
@@ -65,18 +67,20 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
 
   var controlPump = function(position, status){
     if (shouldStopPump(position, status)){
-      this.emergencyStop();
+      emergencyStop();
     } else {
-      this.endEmergencyStop();
+      endEmergencyStop();
     }
   }
 
+  var overflowCallback = null;
+
   this.watchOverflows = function(callback){
-    this.overflowCallback = callback;
-    this.overflowSensors.forEach(function(sensor){
+    overflowCallback = callback;
+    overflowSensors.forEach(function(sensor){
       sensor.getStatus(controlPump);
       sensor.watchOverflow(controlPump);
-    }
+    });
   }
 
   var circuitPaused = false;
@@ -94,14 +98,14 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
     }
   }
 
-  this.emergencyStop = function(){
+  var emergencyStop = function(){
     circuitEmergencyStopped = true;
     pump.stop();
     l.log('warning', 'emergencyStop - Overflow => Stopping the pump');
-    this.overflowCallback();
+    overflowCallback();
   }
 
-  this.endEmergencyStop = function(){
+  var endEmergencyStop = function(){
     circuitEmergencyStopped = false;
     if (circuitPaused == false){
       pump.start();
@@ -111,7 +115,7 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
 
   this.detectStuckWaterLevel = function(callback, interval){
     setInterval(function(){
-      this.levelSensors.forEach(function(sensor){
+      levelSensors.forEach(function(sensor){
         sensor.checkCycleDuration(function(cycleTime, description){
           callback(sensor.position, cycleTime, description);
         });
@@ -121,4 +125,4 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
 
 }
 
-module.exports = PumpController;
+module.exports = WaterCircuitController;

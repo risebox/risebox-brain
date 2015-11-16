@@ -34,7 +34,7 @@ var Box = function(tankDimensions) {
   var controllers = require('./controllers/controllers');
   var lights      = new controllers.LightSystemController('P8_17', [  {blue: 'P8_36', red: 'P8_45', white: 'P8_46'},
                                                                       {blue: 'P9_29', red: 'P9_31', white: 'P9_42'}  ]);
-  var waterCircuit = new controllers.WaterSystemController('P8_16', tankDimensions, {lower: 'P8_7', upper: 'P8_10'},
+  var waterCircuit = new controllers.WaterCircuitController('P8_16', tankDimensions, {lower: 'P8_7', upper: 'P8_10'},
                                                                                    {lower: 'P8_8', upper: 'P8_9'});
 
   var fan         = new controllers.FanController('P8_15');
@@ -109,7 +109,7 @@ var Box = function(tankDimensions) {
       } else {
         l.log('error', 'Could not update brain');
       }
-    }});
+    });
   }
 
   function apiPath(){
@@ -152,21 +152,21 @@ var Box = function(tankDimensions) {
     return apiKey
   }
 
-  this.sendWaterCycleMeasure = function(position, duration){
+  var sendWaterCycleMeasure = function(position, duration){
     api.sendMeasure(metricKeyFromPosition(position), duration);
   }
 
-  this.sendWaterVolumeMeasure = function(volume){
+  var sendWaterVolumeMeasure = function(volume){
     api.sendMeasure('WVOL', volume);
   }
 
-  this.raiseOverflowAlert = function(position){
+  var raiseOverflowAlert = function(position){
     api.sendLog('warning', 'controlPump - Overflow on ' + position + ' bed => Stopping the pump');
     // TODO
     // api.sendAlert(metricKeyFromPosition(position, duration, description));
   }
 
-  this.raiseStuckLevelAlert = function(position, duration, description){
+  var raiseStuckLevelAlert = function(position, duration, description){
     api.sendAlert(metricKeyFromPosition(position), duration, description);
   }
 

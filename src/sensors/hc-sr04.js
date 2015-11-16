@@ -10,8 +10,9 @@ var WaterVolumeProbe = function(dimensions){
     regexp = /Distance = ([\d|\.]*)/g;
     total = 0;
     count = 0;
-    
+    console.log('sensorOutput '+sensorOutput);
     while (match = regexp.exec(sensorOutput)) {
+      console.log('match[1]' + match[1]);
       total = total + parseFloat(match[1]);
       count = count + 1;
     }
@@ -25,6 +26,7 @@ var WaterVolumeProbe = function(dimensions){
   
   this.getVolume = function(successCb, errorCb){
     exec(probeScript, function(error, stdout, stderr){
+      console.log('stdout '+stdout);
       if (error == null) {
         waterVolume = volumeFromDistance(averageDistance(stdout));
         successCb(waterVolume);
