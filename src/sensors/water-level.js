@@ -2,11 +2,15 @@ var b = require('bonescript'),
     l = require('../utils/logger');
 
 var WaterLevelProbe = function(position, pin){
+  console.log('in water level '+ position + ' pin' + pin);
   this.position = position;
   this.pin = pin;
   this.lastLevels = {};
   this.cycleMaxDurations = {full: 600, empty: 600};
+ 
+  b.pinMode(this.pin, b.INPUT);
   
+ 
   this.direction = function(value){
     return (value == 0 ? 'down' : 'up')
   }
@@ -18,7 +22,6 @@ var WaterLevelProbe = function(position, pin){
   this.watchCycle = function(callback){
     if (this.pin == null) return;
     
-    b.pinMode(this.pin, b.INPUT);
     l.log('info', 'Water level ' + this.position + ' - now watching');
     var that = this;
     

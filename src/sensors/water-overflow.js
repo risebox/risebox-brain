@@ -5,6 +5,7 @@ var WaterOverflowProbe = function(position, pin){
   const NORMAL = 'normal',
         OVERFLOW = 'overflow';
 
+  console.log('in water_overflow '+position+' pin'+pin);
   this.position = position;
   this.pin = pin;
 
