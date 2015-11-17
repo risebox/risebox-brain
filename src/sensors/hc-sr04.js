@@ -26,6 +26,8 @@ var WaterVolumeProbe = function(dimensions){
   
   this.getVolume = function(successCb, errorCb){
     exec(probeScript, function(error, stdout, stderr){
+      console.log('error '+error);
+      console.log('stderr '+stderr);
       console.log('stdout '+stdout);
       if (error == null) {
         waterVolume = volumeFromDistance(averageDistance(stdout));

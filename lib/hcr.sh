@@ -1,4 +1,4 @@
 #!/bin/bash
-cd ../dependencies/hcsr04-master
+cd /home/risebox/risebox-brain/dependencies/hcsr04-master
 ./hcsr04
 exit 0
