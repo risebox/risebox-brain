@@ -104,7 +104,7 @@ var nowAsInteger = function(){
 }
 
 var sendMeasure = function (metricKey, value){
-  formData = { 'value' : value, 'taken_at' : nowAsInteger()};
+  formData = { 'value' : value, 'taken_at' : null };
   path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/metrics/' + metricKey + '/measures';
   post(path, formData);
   /*requestApi('post', path, formData, );*/
@@ -117,7 +117,7 @@ var sendAlert = function (metricKey, value, description){
 }
 
 var sendLog = function (level, msg){
-  formData = { 'level': level, 'body': msg, 'logged_at': nowAsInteger()};
+  formData = { 'level': level, 'body': msg, 'logged_at': null };
   path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/logs';
   post(path, formData);
 }
@@ -133,7 +133,7 @@ var getDeltaSettings = function (success, error) {
 }
 
 var brainUpdated = function (version) {
-  formData = { 'version': version, 'brain_upgraded_at': nowAsInteger() };
+  formData = { 'version': version, 'brain_upgraded_at': null };
   path = '/api/devices/' + process.env.RISEBOX_DEVICE_KEY + '/brain_upgrade';
   post(path, formData);
 }
