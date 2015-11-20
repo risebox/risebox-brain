@@ -124,12 +124,12 @@ var Box = function(tankDimensions) {
 
   function switchToWhiteLocally(){
     now = new Date();
-    localAllWhiteUntil = new Date(now.getTime() + (10 * 60 * 1000)); // 10 minutes in milliseconds
+    localAllWhiteUntil = new Date(now.getTime() + (0.1 * 60 * 1000)); // 10 minutes in milliseconds
     lights.sightLights();
   };
 
   this.activateUserButton = function (){
-    userButton.lightUp();
+    //userButton.lightUp();
     userButton.onShortClick(switchToWhiteLocally);
   }
 

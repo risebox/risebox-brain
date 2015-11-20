@@ -87,8 +87,10 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
   var circuitEmergencyStopped = false;
 
   this.pause = function(){
-    circuitPaused = true;
-    pump.stop();
+    if (circuitPaused == false){
+      circuitPaused = true;
+      pump.stop();
+    }
   }
 
   this.endPause = function(){
