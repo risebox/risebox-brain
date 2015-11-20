@@ -16,7 +16,20 @@ var UserButtonController = function(buttonPin, ledPin){
   }
 
   this.onShortClick = function(callback){
-  	b.attachInterrupt(buttonPin, true, b.CHANGE, callback);
+  	var handleInterrupt = function(x){
+      if (x.attached){
+        l.log('info', 'user button click event attached');
+      } else {
+        if (x.value === 0){
+          l.log('info', 'user button - button released');
+          callback();
+          }
+        } else {
+          l.log('warn', 'user button - button pressed');
+        }
+      }
+    };
+  	b.attachInterrupt(buttonPin, true, b.CHANGE, handleInterrupt);
   }
 
 
