@@ -38,6 +38,8 @@ var Box = function(tankDimensions) {
                                                                                    {lower: 'P8_8', upper: 'P8_9'});
 
   var fan         = new controllers.FanController('P8_15');
+  var userButton  = new controllers.UserButtonController('P8_32', 'P8_34');
+  var localAllWhiteUntil = new Date();
 
   function applySettingsChanges(s){
     l.log('info', 'SettingsManager - Applying settings');
@@ -55,7 +57,7 @@ var Box = function(tankDimensions) {
       lights.pause();
     }
     else {
-      if(allWhiteDate > now) {
+      if(localAllWhiteUntil > now || allWhiteDate > now) {
         lights.sightLights();
       }
       else {
@@ -120,14 +122,15 @@ var Box = function(tankDimensions) {
     }
   }
 
-  this.statusLight = function (){
-    b.analogWrite('P8_34', 0.5, 2000, function(x){
-      if (x.data){
-        l.log('info', 'StatusLight - ' + JSON.stringify(x));
-      } else {
-        l.log('error', 'StatusLight - Error ' + x.err);
-      }
-    });
+  function switchToWhiteLocally(){
+    now = new Date();
+    localAllWhiteUntil = new Date(now.getTime() + (10 * 60 * 1000)); // 10 minutes in milliseconds
+    lights.sightLights();
+  };
+
+  this.activateUserButton = function (){
+    userButton.lightUp();
+    userButton.onShortClick(switchToWhiteLocally);
   }
 
   this.sendWaterTempMeasure = function (){

@@ -24,7 +24,7 @@ setInterval(box.sendWaterTempMeasure, 1200000);
 setInterval(box.sendAirTempAndHumMeasure, 1200000);
 setInterval(box.sendPHMeasure, 1200000);
 
-box.statusLight();
+box.activateUserButton();
 
 var gracefullShutdown = function(eventName){
   console.log(eventName + ' received => shutting down the box');
