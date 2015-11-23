@@ -106,9 +106,14 @@ var Box = function(tankDimensions) {
     var cmd = './update-brain.sh v' + version;
     exec(cmd, function(error, stdout, stderr) {
       if (error == null) {
+        console.log(stdout);
         api.sendLog('info', 'Box - Brain updated! will now reboot');
-        shutdown();
+        shutdown(function(){
+          console.log('Box shutting down after code update. Quitting...');
+          process.exit(0);
+        });
       } else {
+        console.log(stderr);
         l.log('error', 'Could not update brain');
       }
     });
