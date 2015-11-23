@@ -15,5 +15,6 @@
   "night_minutes": 0,
   "brain_update": 0,
   "brain_version": null,
-  "all_white_duration": 600
+  "all_white_duration": 600,
+  "ph_offset": 0
 }
