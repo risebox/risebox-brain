@@ -87,7 +87,7 @@ var Box = function(tankDimensions) {
       }
     }
 
-    if (s.brain_update == 1){
+    if (s.brain_update == 1 && brainVersion != null){
       if (brainVersion == s.brain_version){
         l.log('info', 'Brain succesfully updated to version ' + brainVersion + ': will tell server');
         api.brainUpdated(brainVersion);
@@ -96,6 +96,7 @@ var Box = function(tankDimensions) {
           l.log('info', 'Brain update requested to version' + s.brain_version + ' (currently v' + brainVersion + ')');
           updateBrain(s.brain_version);
         } //else s.brain_version == null => default file : Do Not update
+
       }
     }
 
@@ -192,7 +193,7 @@ var Box = function(tankDimensions) {
     lights.stop();
     fan.stop();
     userButton.lightOut();
-    
+
     if (callback != null) {
       callback();
     }
