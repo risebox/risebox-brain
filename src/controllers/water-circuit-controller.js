@@ -29,6 +29,10 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
     return levelSensors[otherPosition];
   }
 
+  this.getWaterVolume = function(callback) {
+    volumeProbe.getVolume(callback);
+  }
+
   this.watchWaterLevels = function(waterCycleCb, waterVolumeCb){
     levelSensors.forEach(function(sensor){
       sensor.watchCycle(function(cycleTime, direction){
