@@ -181,7 +181,7 @@ var Box = function(tankDimensions) {
     });
   }
 
-  this.shutdown = function(callback){
+  function shutdown(callback) {
     api.sendLog('warn', 'Box - Shutdown requested');
 
     lights.stop();
@@ -189,6 +189,10 @@ var Box = function(tankDimensions) {
     userButton.lightOut();
     
     callback();
+  }
+
+  this.shutdown = function(callback){
+    shutdown(callback);
   }
 
   settings.load();
