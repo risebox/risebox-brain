@@ -2,7 +2,7 @@ var b    = require('bonescript'),
     exec = require('child_process').exec,
     l = require('../utils/logger');
 
-var pythonScript = '/home/risebox/Adafruit_Python_DHT/examples/AdafruitDHT.py';
+var pythonScript = '/home/risebox/risebox-brain/dependencies/Adafruit_Python_DHT/examples/AdafruitDHT.py';
 
 var AirProbe = function(pin){
   this.pin = pin;
