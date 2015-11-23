@@ -6,14 +6,22 @@ var UserButtonController = function(buttonPin, ledPin){
   var ledPin    = ledPin;
   b.pinMode(buttonPin, b.INPUT);
 
-  this.lightUp = function(){
-  	b.analogWrite(ledPin, 0.5, 2000, function(x){
+  function changeLedLight(duty){
+  	b.analogWrite(ledPin, duty, 2000, function(x){
       if (x.data){
         l.log('info', 'StatusLight - ' + JSON.stringify(x));
       } else {
         l.log('error', 'StatusLight - Error ' + x.err);
       }
     });
+  }
+
+  this.lightUp = function(){
+  	changeLedLight(0.5);
+  }
+
+  this.lightOut = function(){
+  	changeLedLight(0);
   }
 
   this.onShortClick = function(callback){
