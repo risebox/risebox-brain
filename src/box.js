@@ -107,7 +107,7 @@ var Box = function(tankDimensions) {
     exec(cmd, function(error, stdout, stderr) {
       if (error == null) {
         api.sendLog('info', 'Box - Brain updated! will now reboot');
-        box.shutdown();
+        this.shutdown();
       } else {
         l.log('error', 'Could not update brain');
       }
@@ -124,7 +124,7 @@ var Box = function(tankDimensions) {
 
   function switchToWhiteLocally(){
     now = new Date();
-    localAllWhiteUntil = new Date(now.getTime() + (s.all_white_duration * 1000)); // 10 minutes in milliseconds
+    localAllWhiteUntil = new Date(now.getTime() + (settings.get('all_white_duration') * 1000)); // in milliseconds
     lights.sightLights();
   };
 

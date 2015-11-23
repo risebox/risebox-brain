@@ -1,3 +1,19 @@
+Version 0.3:
+ - fix all_white_duration setting
+ - add all_white_duration setting
+ - fix dht22 path
+ - fix user button and light
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - Update README.md
+ - fix interrupt code
+ - switch to white on click on the user button plus refactor user button light
+ - stop sending timestamp for API calls
+ - pinMode only once
+ - overflow pinMode only once
+ - fix hcr path
+ - fix typos and reduce hcr04 iterations
+ - handle pump pause or stop
+
 Version 0.2:
  - brain auto upgrade version from API
  - add bump_version script
