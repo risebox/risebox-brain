@@ -43,7 +43,7 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
             l.log('info', 'Water Volume - Time to compute tank water volume');
             volumeProbe.getVolume(function(volume){
               l.log('info', 'volume is '+volume);
-              waterVolumeCb('WVOL', volume);
+              waterVolumeCb(volume);
             }, function(error){
               l.log('error', error);
             });
