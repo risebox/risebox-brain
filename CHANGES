@@ -1,3 +1,6 @@
+Version 0.6:
+ - fix shutdown on brain update and bump version push
+
 Version 0.5:
  - try fix on shutdown call
 
