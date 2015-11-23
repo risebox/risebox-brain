@@ -29,7 +29,7 @@ var Box = function(tankDimensions) {
   var sensors = require('./sensors/sensors');
   var airProbe                 = new sensors.AirProbe("P9_15"),
       waterTempProbe           = new sensors.WaterTempProbe("P9_12"),
-      phProbe                  = new sensors.PHProbe('P9_23', 'P9_36');
+      phProbe                  = new sensors.PHProbe('P9_23', 'P9_35');
 
   var controllers = require('./controllers/controllers');
   var lights      = new controllers.LightSystemController('P8_17', [  {blue: 'P8_36', red: 'P8_45', white: 'P8_46'},
