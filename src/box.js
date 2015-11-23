@@ -188,7 +188,9 @@ var Box = function(tankDimensions) {
     fan.stop();
     userButton.lightOut();
     
-    callback();
+    if (callback != null) {
+      callback();
+    }
   }
 
   this.shutdown = function(callback){
