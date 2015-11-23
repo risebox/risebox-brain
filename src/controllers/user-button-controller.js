@@ -11,7 +11,7 @@ var UserButtonController = function(buttonPin, ledPin){
       if (x.data){
         l.log('info', 'StatusLight - ' + JSON.stringify(x));
       } else {
-        l.log('error', 'StatusLight - Error ' + x.err);
+        l.log('error', 'StatusLight - Error ' + JSON.stringify(x));
       }
     });
   }
