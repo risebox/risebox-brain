@@ -1,0 +1,13 @@
+[Unit] 
+Description=Risebox Brain recovery program 
+After=syslog.target network.target 
+
+[Service] 
+Type=simple
+WorkingDirectory=/home/risebox/risebox-brain
+ExecStart=/home/risebox/risebox-brain/risebox-brain-recovery.sh 
+Restart=always
+RestartSec=5min
+
+[Install] 
+WantedBy=multi-user.target
