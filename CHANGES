@@ -1,3 +1,6 @@
+Version 0.10:
+ - stop brain before updating
+
 Version 0.9:
  - add console log on status light
 
