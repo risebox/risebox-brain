@@ -107,7 +107,7 @@ var Box = function(tankDimensions) {
     exec(cmd, function(error, stdout, stderr) {
       if (error == null) {
         api.sendLog('info', 'Box - Brain updated! will now reboot');
-        this.shutdown();
+        shutdown();
       } else {
         l.log('error', 'Could not update brain');
       }
