@@ -40,13 +40,15 @@ var WaterCircuitController = function(pumpPin, tankDimensions, levelPins, overfl
           now = parseInt(Date.now()/1000);
           lastOtherFlush = otherWaterlevelProbe(sensor).lastFlushTime();
           if (now - lastOtherFlush < 60){
-            l.log('info', 'Water Volume - Time to compute tank water volume');
-            volumeProbe.getVolume(function(volume){
-              l.log('info', 'volume is '+volume);
-              waterVolumeCb(volume);
-            }, function(error){
-              l.log('error', error);
-            });
+            l.log('info', 'Water Volume - Time to compute tank water volume in 30 sec');
+            setTimeout(function(){
+              volumeProbe.getVolume(function(volume){
+                l.log('info', 'volume is '+volume);
+                waterVolumeCb(volume);
+              }, function(error){
+                l.log('error', error);
+              });
+            }, 30000);
           }
         }
         waterCycleCb(sensor.position, duration);

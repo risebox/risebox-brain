@@ -132,11 +132,11 @@ var Box = function(tankDimensions) {
     now = new Date();
     localAllWhiteUntil = new Date(now.getTime() + (settings.get('all_white_duration') * 1000)); // in milliseconds
     lights.sightLights();
-    waterCircuit.getWaterVolume(function(volume){
-      l.log('info', 'volume d eau : ' + volume);
-    }, function(error){
-              l.log('error', error);
-            });
+    // waterCircuit.getWaterVolume(function(volume){
+    //   l.log('info', 'volume d eau : ' + volume);
+    // }, function(error){
+    //           l.log('error', error);
+    //         });
   };
 
   this.activateUserButton = function (){
