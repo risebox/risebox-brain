@@ -1,11 +1,11 @@
 var b = require('bonescript'),
     l = require('../utils/logger');
 
-var PHProbe = function(powerPin, analogPin){
+var PHProbe = function(powerPin, analogPin, offset){
   this.analogPin = analogPin;
   this.powerPin = powerPin;
   b.pinMode(this.powerPin, b.OUTPUT);
-  this.PHOffset = 0.15;
+  this.PHOffset = offset || 0;
   
   this.getPH = function(successCb, errorCb) {
     var that = this;
