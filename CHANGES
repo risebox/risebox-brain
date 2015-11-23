@@ -1,3 +1,6 @@
+Version 0.8:
+ - avoid null callback syndrome
+
 Version 0.7:
  - fix bump version push for old gits
 
