@@ -10,7 +10,7 @@ function loadJSONfile (filename) {
 	  var contents = fs.readFileSync(filename, 'utf8');
 		return JSON.parse(contents);
 	} catch (err) {
-		throw err;	
+		throw err;
 	}
 }
 
@@ -32,38 +32,42 @@ var SettingsManager = function(api){
   var api = api;
   EventEmitter.call(this);
   var that = this;
-  
+
   this.load = function(){
     this.emit('change');
     this.emit('process', settings);
     api.getAllSettings(processFullUpdate, askFullUpdateAgain)
   }
-  
+
+  this.get = function(key){
+    return settings[key];
+  }
+
   function addToSettings(element, index, array) {
     settings[element.key] = element.value;
   }
-    
+
   function watchAndUpdateSettings(){
     api.getDeltaSettings(function(result){
-      if(result.result.length > 0) { 
+      if(result.result.length > 0) {
         updateSettings(result.result);
         that.emit('change');
       }
       that.emit('process', settings);
     });
   }
-  
+
   function processFullUpdate(result){
     updateSettings(result.result)
     that.emit('change');
     that.emit('process', settings);
     setInterval(watchAndUpdateSettings, 5000);
   }
-  
+
   function askFullUpdateAgain(error){
     setTimeout(function(){api.getAllSettings(processFullUpdate, askFullUpdateAgain)}, 5000)
   }
-  
+
   function updateSettings(result) {
     result.forEach(addToSettings);
     fs.writeFile(settingsFile, JSON.stringify(settings, null, 2), function(err){
@@ -73,7 +77,7 @@ var SettingsManager = function(api){
       l.log('info', 'SettingsManager - settings file successfully updated');
     });
   }
-  
+
 }
 
 util.inherits(SettingsManager, EventEmitter);
