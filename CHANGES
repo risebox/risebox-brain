@@ -1,3 +1,8 @@
+Version 0.25:
+ - forgot to add the ph offset setting to default settings
+ - move ph offset to a user setting
+ - wait 30 sec before measuring wvol
+
 Version 0.24:
  - fix water volume
 
