@@ -21,7 +21,7 @@ if [ -f VERSION ]; then
     V_MINOR=${BASE_LIST[1]}
     echo "Current version : $BASE_STRING"
     V_MINOR=$((V_MINOR + 1))
-    if [ `echo "$V_MINOR % 10" | bc` -eq 0 ]
+    if [ `echo "$V_MINOR % 10" | bc` -eq 0 ]; then
       V_MINOR=$((V_MINOR + 1)) # Skip .10, .20 etc... as not supported with Risebox api
     fi
     SUGGESTED_VERSION="$V_MAJOR.$V_MINOR"
