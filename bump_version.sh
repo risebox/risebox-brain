@@ -21,6 +21,9 @@ if [ -f VERSION ]; then
     V_MINOR=${BASE_LIST[1]}
     echo "Current version : $BASE_STRING"
     V_MINOR=$((V_MINOR + 1))
+    if [ `echo "$V_MINOR % 10" | bc` -eq 0 ]
+      V_MINOR=$((V_MINOR + 1)) # Skip .10, .20 etc... as not supported with Risebox api
+    fi
     SUGGESTED_VERSION="$V_MAJOR.$V_MINOR"
     read -p "Enter a version number [$SUGGESTED_VERSION]: " INPUT_STRING
     if [ "$INPUT_STRING" = "" ]; then
@@ -28,6 +31,7 @@ if [ -f VERSION ]; then
     fi
     echo "Will set new version to be $INPUT_STRING"
     echo $INPUT_STRING > VERSION
+    echo $BASE_STRING > ROLLBACK
     echo "Version $INPUT_STRING:" > tmpfile
     git log --pretty=format:" - %s" "v$BASE_STRING"...HEAD >> tmpfile
     echo "" >> tmpfile
