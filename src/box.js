@@ -139,6 +139,11 @@ var Box = function(tankDimensions) {
     // }, function(error){
     //           l.log('error', error);
     //         });
+    phProbe.getPH(function(phValue) {
+      api.sendMeasure('PH', phValue);
+    },function(errorMsg){
+      api.sendLog('error', errorMsg);
+    });
   };
 
   this.activateUserButton = function (){
