@@ -1,7 +1,7 @@
 var querystring = require('querystring'),
     https = require('https');
 
-var API_URL = 'rbdev-api.herokuapp.com';
+var API_URL = process.env.API_URL;
 var HEADERS = { 'Accept': 'application/json',
                 'RISEBOX-USER-EMAIL': process.env.RISEBOX_USER_EMAIL,
                 'RISEBOX-USER-SECRET': process.env.RISEBOX_USER_SECRET
