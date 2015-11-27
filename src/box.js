@@ -1,5 +1,5 @@
 var fs = require('fs'),
-    b = require('bonescript'),
+    b = equire('bonescript'),
     l = require('./utils/logger'),
     exec = require('child_process').exec;
 
