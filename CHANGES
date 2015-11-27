@@ -1,3 +1,9 @@
+Version 0.31:
+ - fix intentional bug in box
+ - fix rollback curl
+ - fix recovery notification url
+ - fix brain recovery
+
 Version 0.29:
  - temporarily crash the program beyond repair and booting
 
