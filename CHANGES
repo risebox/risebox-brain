@@ -1,3 +1,6 @@
+Version 0.32:
+ - recovery restarts the brain after downgrading
+
 Version 0.31:
  - fix intentional bug in box
  - fix rollback curl
