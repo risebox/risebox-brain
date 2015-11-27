@@ -1,3 +1,6 @@
+Version 0.29:
+ - temporarily crash the program beyond repair and booting
+
 Version 0.28:
  - commit rollback fils when bumping version
 
