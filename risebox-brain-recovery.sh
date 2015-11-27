@@ -16,7 +16,7 @@ if [[ $(systemctl is-active risebox-brain.service) == "failed" ]]; then
 
   if [[ $(systemctl is-active risebox-brain.service) == "failed" ]]; then
     echo "After ${timeToWait} secs, the Brain is still failed => Will notify server and rollback"
-    curl https://$apiServer/api/devices/$(deviceKey)/brain_rollback --data "version=$rollbackVersion" -H "Accept: application/json" -H "RISEBOX-USER-EMAIL: $(userEmail)" -H "RISEBOX-USER-SECRET: $(userSecret)"
+    curl https://$apiServer/api/devices/$deviceKey/brain_rollback --data "version=${rollbackVersion}" -H "Accept: application/json" -H "RISEBOX-USER-EMAIL: ${userEmail}" -H "RISEBOX-USER-SECRET: ${userSecret}"
     sh ./update-brain.sh v$rollbackVersion
 
    # reboot
