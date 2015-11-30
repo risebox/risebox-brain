@@ -1,6 +1,8 @@
 var env = require('node-env-file');
 var fs = require('fs');
-exec = require('child_process').exec;
+var exec = require('child_process').exec;
+var l = require('./utils/logger');
+var u = require('./utils/utils');
 
 env('.env');
 
@@ -11,8 +13,6 @@ path = function(pathString) {
 src_path = function(pathString) {
   return path('/src/' + pathString);
 }
-
-u = require('./utils/utils');
 
 var resetSystemTime = function(){
   exec('ntpdate -s 0.fr.pool.ntp.org', function(error, stdout, stderr) {
