@@ -1,5 +1,6 @@
 var env = require('node-env-file');
 var fs = require('fs');
+exec = require('child_process').exec;
 
 env('.env');
 
@@ -12,6 +13,19 @@ src_path = function(pathString) {
 }
 
 u = require('./utils/utils');
+
+var resetSystemTime = function(){
+  exec('ntpdate -s 0.fr.pool.ntp.org', function(error, stdout, stderr) {
+    if (error == null) {
+      l.log('info', 'System time setup');
+    } else {
+      l.log('error', 'Could not update system time');
+    }
+  });
+}
+
+resetSystemTime();
+setInterval(resetSystemTime, 15*60*1000);
 
 var Box      = require('./box');
 var box = new Box({'width': 110, 'depth': 50, 'probeHeight': 45});
