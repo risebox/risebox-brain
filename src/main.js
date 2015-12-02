@@ -28,7 +28,7 @@ resetSystemTime();
 setInterval(resetSystemTime, 15*60*1000);
 
 var Box      = require('./box');
-var box = new Box({'width': 110, 'depth': 50, 'probeHeight': 45});
+var box = new Box({'width': 102.5, 'depth': 46.2, 'probeHeight': 37.7});
 
 box.sendWaterTempMeasure();
 box.sendAirTempAndHumMeasure();
