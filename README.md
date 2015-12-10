@@ -55,30 +55,33 @@ sudo reboot
 ```
 
 3. Setup Date & Time
+
+///WARNING\\\
+This has gone wrong before. This simplified procedure has been tested on a new BBB from Element14 on 2015 Nov 30th :
+
+The BBB comes setup with ntpdate (verify by doing  dpkg-query -l 'ntp*'), and syncs the time over the network ok.
+
+Just set the local time to Paris by doing :
+
 ```
-date -s "August 24 10:00 UTC 2015"
+dpkg-reconfigure tzdata
 ```
 
-Then you need to set up NTP Time
+Then select Europe > Paris and enter.
+
+If a manual time reset is needed you can do :
 
 ```
-sudo apt-get install ntp
+ntpdate -s 0.fr.pool.ntp.org
 ```
 
-Then go to http://www.pool.ntp.org/zone and find a server close to your location, for instance france. Then edit the /etc/ntp.conf file and add the 4 server addresses.
-```
-server 0.fr.pool.ntp.org
-server 1.fr.pool.ntp.org
-server 2.fr.pool.ntp.org
-server 3.fr.pool.ntp.org
-````
+To check the time, just type :
 
-then setup local TimeZone this way:
 ```
-rm /etc/localtime
-ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
-reboot
+date
 ```
+
+NB :legacy time manipulations moved to extra/legacy section.
 
 4. Install Risebox Software
 ```
@@ -293,6 +296,35 @@ Pour vérifier que le HDMI est bien désactivé, faire un __cat /sys/devices/bon
  8: ff:P-O-L Override Board Name,00A0,Override Manuf,cape-bone-iio
 ```
 
+2. Legacy code, do not use if you can avoid it.
+
+```
+date -s "August 24 10:00 UTC 2015"
+```
+
+Then you need to set up NTP Time
+
+```
+sudo apt-get install ntp
+```
+
+Then go to http://www.pool.ntp.org/zone and find a server close to your location, for instance france. Then edit the /etc/ntp.conf file and add the 4 server addresses.
+```
+server 0.fr.pool.ntp.org
+server 1.fr.pool.ntp.org
+server 2.fr.pool.ntp.org
+server 3.fr.pool.ntp.org
+````
+
+then setup local TimeZone this way:
+```
+rm /etc/localtime
+ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
+reboot
+```
+
+
+
 ##<a name="run"></a>Run
 
 ### Autorun when system starts
@@ -326,6 +358,4 @@ To run the brain program manually, use __risebox-brain.sh__ script
 cd /home/risebox/risebox-brain
 ./risebox-brain.sh
 ```
-
-
 
