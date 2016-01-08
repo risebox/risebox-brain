@@ -90,10 +90,10 @@ Copy deploy keys from the vault :
 - ```brain-dev.key``` & ```brain-dev.pub``` for development
 into /root/.ssh
 
-- Rename private key as ```id_rsa``` and public key as ``ìd_rsa.pub```
+- Rename private key as ```id_rsa``` and public key as ```id_rsa.pub```
 
 also set correct execution rights:
-```chmod 700 id_rsa````
+```chmod 700 id_rsa```
 
 ```
 cd /home/risebox
