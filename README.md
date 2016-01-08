@@ -102,15 +102,7 @@ git clone git@github.com:risebox/risebox-brain.git
 npm install
 ```
 
-Also create a __.env__ file in __/home/risebox/risebox-brain__
-with following content:
-```bash
-RISEBOX_KEY=lab1
-RISEBOX_SECRET=token2
-MOCK_SENSORS=false
-MOCK_API=false
-LOG_LEVEL=info
-```
+- Copy __.env.example__ to __.env__ file and adapt with the box config
 
 5. Install temperature probe DS18B20
 
