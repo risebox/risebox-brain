@@ -1,5 +1,8 @@
 var env = require('node-env-file');
 var fs = require('fs');
+var exec = require('child_process').exec;
+var l = require('./utils/logger');
+var u = require('./utils/utils');
 
 env('.env');
 
@@ -11,10 +14,21 @@ src_path = function(pathString) {
   return path('/src/' + pathString);
 }
 
-u = require('./utils/utils');
+var resetSystemTime = function(){
+  exec('ntpdate -s 0.fr.pool.ntp.org', function(error, stdout, stderr) {
+    if (error == null) {
+      l.log('info', 'System time setup');
+    } else {
+      l.log('error', 'Could not update system time');
+    }
+  });
+}
+
+resetSystemTime();
+setInterval(resetSystemTime, 15*60*1000);
 
 var Box      = require('./box');
-var box = new Box({'width': 110, 'depth': 50, 'probeHeight': 45});
+var box = new Box({'width': 102.5, 'depth': 46.2, 'probeHeight': 37.7});
 
 box.sendWaterTempMeasure();
 box.sendAirTempAndHumMeasure();
