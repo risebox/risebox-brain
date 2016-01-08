@@ -84,9 +84,20 @@ date
 NB :legacy time manipulations moved to extra/legacy section.
 
 4. Install Risebox Software
+
+Copy deploy keys from the vault : 
+- ```brain-prod.key``` & ```brain-prod.pub``` for production
+- ```brain-dev.key``` & ```brain-dev.pub``` for development
+into /root/.ssh
+
+- Rename private key as ```id_rsa``` and public key as ``ìd_rsa.pub```
+
+also set correct execution rights:
+```chmod 700 id_rsa````
+
 ```
 cd /home/risebox
-git clone https://github.com/risebox/risebox-brain
+git clone git@github.com:risebox/risebox-brain.git
 ./lib/install_dependencies.sh 
 npm install
 ```
