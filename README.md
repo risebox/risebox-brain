@@ -269,6 +269,18 @@ Then finally reboot your system:
 reboot
 ```
 
+On kernel 3.8 if wifi is not powered on when board start: download & install Adafruit wifi-reret script
+```
+git clone https://github.com/adafruit/wifi-reset.git
+cd wifi-reset
+chmod +x install.sh
+./install.sh
+```
+And reboot your system:
+```
+reboot
+```
+
 ##<a name="extras"></a>Extras
 
 1. Comment supprimer le code HDMI (peut être utile pour certaines PINs)
