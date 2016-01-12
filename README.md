@@ -347,17 +347,20 @@ reboot
 
 * Create link for systemd
 ```
-ln $RISEBOX_HOME/risebox-brain/risebox-brain.service /lib/systemd/risebox-brain.service 
+ln $RISEBOX_HOME/risebox-brain/risebox-brain.service /lib/systemd/risebox-brain.service
+ln $RISEBOX_HOME/risebox-brain/risebox-brain-recovery.service /lib/systemd/risebox-brain-recovery.service
 ```
 
 * Enable the unit files on the original service file (not the link see [here](https://bugzilla.redhat.com/show_bug.cgi?id=955379)).
 ```bash
 systemctl enable $RISEBOX_HOME/risebox-brain/risebox-brain.service
+systemctl enable $RISEBOX_HOME/risebox-brain/risebox-brain-recovery.service
 ```
 
 * Start the service
 ```bash
 systemctl start risebox-brain.service
+systemctl start risebox-brain-recovery.service
 ```
 
 The following commands may be usefull
