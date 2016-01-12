@@ -271,6 +271,7 @@ reboot
 
 On kernel 3.8 if wifi is not powered on when board start: download & install Adafruit wifi-reret script
 ```
+cd dependencies
 git clone https://github.com/adafruit/wifi-reset.git
 cd wifi-reset
 chmod +x install.sh
