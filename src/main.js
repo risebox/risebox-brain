@@ -3,7 +3,7 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var l = require('./utils/logger');
 var u = require('./utils/utils');
-var api2 = require('./api/api');
+//var api2 = require('./api/api');
 
 env('.env');
 
@@ -15,20 +15,12 @@ src_path = function(pathString) {
   return path('/src/' + pathString);
 }
 
-var resetSystemTime = function(){
-  exec('ntpdate -s 0.fr.pool.ntp.org', function(error, stdout, stderr) {
-    if (error == null) {
-      api2.sendLog('info', 'System time setup with ntpdate');
-    } else {
-      api2.sendLog('error', 'Could not update system time with ntpdate');
-    }
-  });
-}
+var TimeSyncer = require('./utils/time-syncer');
+var timeSyncer = new TimeSyncer();
+//timeSyncer.sync();
+//setInterval(timeSyncer.sync, 15*60*1000);
+setInterval(timeSyncer.sync, 1*60*1000);
 
-api2.sendLog('At startup, time is '+ new Date())
-resetSystemTime();
-api2.sendLog('After resetSystemTime, time is '+ new Date())
-setInterval(resetSystemTime, 15*60*1000);
 
 var Box      = require('./box');
 var box = new Box({'width': 102.5, 'depth': 46.2, 'probeHeight': 37.7});

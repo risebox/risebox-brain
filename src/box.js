@@ -2,7 +2,7 @@ var fs = require('fs'),
     b = require('bonescript'),
     l = require('./utils/logger'),
     exec = require('child_process').exec;
-    api2 = require('./api/api');
+    //api2 = require('./api/api');
 
 var Box = function(tankDimensions) {
 
@@ -48,12 +48,12 @@ var Box = function(tankDimensions) {
     phProbe.PHOffset = s.ph_offset;
 
     now = new Date();
-    api2.sendLog('info', 'now is '+ now);
+    api.sendLog('info', 'for Box now is '+ now);
     allWhiteDate = Date.parse(s.all_white_until);
-    api2.sendLog('info', 'allWhiteUntil date is ' + allWhiteDate);
+    //api2.sendLog('info', 'allWhiteUntil date is ' + allWhiteDate);
     noLightsDate = Date.parse(s.no_lights_until);
-    api2.sendLog('info', 'noLighs date is ' + noLightsDate);
-    api2.sendLog('info', 'local allWhiteUntil date is ' + localAllWhiteUntil);
+    //api2.sendLog('info', 'noLighs date is ' + noLightsDate);
+    //api2.sendLog('info', 'local allWhiteUntil date is ' + localAllWhiteUntil);
     thisMoment = now.getHours() + now.getMinutes() / 60;
     dayStart = s.day_hours + s.day_minutes / 60;
     dayEnd = s.night_hours + s.night_minutes / 60;
