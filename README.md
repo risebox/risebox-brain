@@ -84,22 +84,25 @@ date
 NB :legacy time manipulations moved to extra/legacy section.
 
 4. Install Risebox Software
+
+Copy deploy keys from the vault : 
+- ```brain-prod.key``` & ```brain-prod.pub``` for production
+- ```brain-dev.key``` & ```brain-dev.pub``` for development
+into /root/.ssh
+
+- Rename private key as ```id_rsa``` and public key as ```id_rsa.pub```
+
+also set correct execution rights:
+```chmod 700 id_rsa```
+
 ```
 cd /home/risebox
-git clone https://github.com/risebox/risebox-brain
+git clone git@github.com:risebox/risebox-brain.git
 ./lib/install_dependencies.sh 
 npm install
 ```
 
-Also create a __.env__ file in __/home/risebox/risebox-brain__
-with following content:
-```bash
-RISEBOX_KEY=lab1
-RISEBOX_SECRET=token2
-MOCK_SENSORS=false
-MOCK_API=false
-LOG_LEVEL=info
-```
+- Copy __.env.example__ to __.env__ file and adapt with the box config
 
 5. Install temperature probe DS18B20
 
@@ -266,6 +269,19 @@ Then finally reboot your system:
 reboot
 ```
 
+On kernel 3.8 if wifi is not powered on when board start: download & install Adafruit wifi-reret script
+```
+cd dependencies
+git clone https://github.com/adafruit/wifi-reset.git
+cd wifi-reset
+chmod +x install.sh
+./install.sh
+```
+And reboot your system:
+```
+reboot
+```
+
 ##<a name="extras"></a>Extras
 
 1. Comment supprimer le code HDMI (peut être utile pour certaines PINs)
@@ -331,17 +347,20 @@ reboot
 
 * Create link for systemd
 ```
-ln $RISEBOX_HOME/risebox-brain/risebox-brain.service /lib/systemd/risebox-brain.service 
+ln $RISEBOX_HOME/risebox-brain/risebox-brain.service /lib/systemd/risebox-brain.service
+ln $RISEBOX_HOME/risebox-brain/risebox-brain-recovery.service /lib/systemd/risebox-brain-recovery.service
 ```
 
 * Enable the unit files on the original service file (not the link see [here](https://bugzilla.redhat.com/show_bug.cgi?id=955379)).
 ```bash
 systemctl enable $RISEBOX_HOME/risebox-brain/risebox-brain.service
+systemctl enable $RISEBOX_HOME/risebox-brain/risebox-brain-recovery.service
 ```
 
 * Start the service
 ```bash
 systemctl start risebox-brain.service
+systemctl start risebox-brain-recovery.service
 ```
 
 The following commands may be usefull
