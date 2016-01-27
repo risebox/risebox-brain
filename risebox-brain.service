@@ -5,6 +5,7 @@ OnFailure=risebox-brain-recovery.service
 
 [Service] 
 Type=simple
+User=root
 WorkingDirectory=/home/risebox/risebox-brain
 ExecStart=/home/risebox/risebox-brain/risebox-brain.sh 
 Restart=always
