@@ -1,3 +1,21 @@
+Version 0.37:
+ - rm network requirement before starting service
+ - time sync every 10 minutes
+ - time sync as dedicated class
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - Merge commit 'd3e2d09' wip logging date sync
+ - wip logging date updates
+ - Update install-dependencies.sh
+ - Update .env.example
+ - Update README.md
+ - Update README.md
+ - Update README.md
+ - Update README.md
+ - Merge branch 'master' of https://github.com/risebox/risebox-brain
+ - add example .env file
+ - Update README.md
+ - Update README.md
+
 Version 0.36:
  - Merge branch 'master' of github.com:risebox/risebox-brain
  - temp commit to set hapy2.5 tank dimensions hardcoded for now
