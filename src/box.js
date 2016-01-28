@@ -46,7 +46,7 @@ var Box = function(tankDimensions) {
     l.log('info', 'SettingsManager - Applying settings');
 
     phProbe.PHOffset = s.ph_offset;
-
+    now = new Date();
     allWhiteDate = Date.parse(s.all_white_until);
     noLightsDate = Date.parse(s.no_lights_until);
     thisMoment = now.getHours() + now.getMinutes() / 60;
@@ -134,18 +134,7 @@ var Box = function(tankDimensions) {
     now = new Date();
     localAllWhiteUntil = new Date(now.getTime() + (settings.get('all_white_duration') * 1000)); // in milliseconds
     lights.sightLights();
-    // waterCircuit.getWaterVolume(function(volume){
-    //   l.log('info', 'volume d eau : ' + volume);
-    // }, function(error){
-    //           l.log('error', error);
-    //         });
-    phProbe.getPH(function(phValue) {
-      api.sendMeasure('PH', phValue);
-      now = new Date();
-      api.sendLog('info', 'for Box now is '+ now);
-    },function(errorMsg){
-      api.sendLog('error', errorMsg);
-    });
+    sendPHMeasure();
   };
 
   this.activateUserButton = function (){
@@ -193,13 +182,16 @@ var Box = function(tankDimensions) {
     api.sendAlert(metricKeyFromPosition(position), duration, description);
   }
 
-  this.sendPHMeasure = function() {
+  function sendPHMeasure(){
     phProbe.getPH(function(phValue) {
       api.sendMeasure('PH', phValue);
     },function(errorMsg){
       api.sendLog('error', errorMsg);
     });
+    api.sendLog('info', 'for Box now is '+ new Date());
   }
+
+  this.sendPHMeasure = sendPHMeasure;
 
   function shutdown(callback) {
     api.sendLog('warn', 'Box - Shutdown requested');
