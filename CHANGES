@@ -1,3 +1,6 @@
+Version 0.38:
+ - time sync retries after 10 secs if no network
+
 Version 0.37:
  - rm network requirement before starting service
  - time sync every 10 minutes
