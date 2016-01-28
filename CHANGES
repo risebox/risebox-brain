@@ -1,3 +1,8 @@
+Version 0.41:
+ - fix error on purpose
+ - Merge branch 'master' of github.com:risebox/risebox-brain
+ - recovery uses parameterized api_url
+
 Version 0.39:
  - error on purpose
  - merge
