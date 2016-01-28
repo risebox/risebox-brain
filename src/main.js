@@ -18,8 +18,7 @@ src_path = function(pathString) {
 var TimeSyncer = require('./utils/time-syncer');
 var timeSyncer = new TimeSyncer();
 //timeSyncer.sync();
-//setInterval(timeSyncer.sync, 15*60*1000);
-setInterval(timeSyncer.sync, 1*60*1000);
+setInterval(timeSyncer.sync, 10*60*1000);
 
 
 var Box      = require('./box');
