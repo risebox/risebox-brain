@@ -2,7 +2,7 @@
 cd /home/risebox/risebox-brain
 echo "Risebox Brain recovery program: now starting"
 
-apiServer=rbdev-api.herokuapp.com
+apiServer=$(sudo cat .env | grep "API_URL=" | xargs echo | cut -f 2 -d '=')
 timeToWait=10
 rollbackVersion=$(sudo cat ./ROLLBACK)
 deviceKey=$(sudo cat .env | grep "RISEBOX_DEVICE_KEY=" | xargs echo | cut -f 2 -d '=')
