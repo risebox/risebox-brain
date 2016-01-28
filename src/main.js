@@ -1,4 +1,4 @@
-var env = require('node-env-file');
+var env = equire('node-env-file');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var l = require('./utils/logger');
