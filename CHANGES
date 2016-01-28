@@ -1,3 +1,8 @@
+Version 0.39:
+ - error on purpose
+ - merge
+ - merge
+
 Version 0.38:
  - time sync retries after 10 secs if no network
 
