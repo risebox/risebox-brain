@@ -1,6 +1,6 @@
 [Unit] 
 Description=Risebox Brain 
-After=syslog.target network.target 
+After=syslog.target
 OnFailure=risebox-brain-recovery.service
 
 [Service] 
