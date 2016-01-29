@@ -5,14 +5,14 @@ var TimeSyncer = function() {
   var api = require('../api/api');
   
   this.sync = function(){
-    ifWebAvailable(function(){
-      console.log("Web is available will sync");
+    // ifWebAvailable(function(){
+    //   console.log("Web is available will sync");
       ntpSync();
-      setTimeout(this.sync, 10*60*1000);
-    },function(){
-      console.log("No Web so No time sync possible will try again in 10 secs");
-      setTimeout(this.sync, 10*1000);
-    });
+    //   setTimeout(this.sync, 10*60*1000);
+    // },function(){
+    //   console.log("No Web so No time sync possible will try again in 10 secs");
+    //   setTimeout(this.sync, 10*1000);
+    // });
   }
 
   var ntpSync = function(){
