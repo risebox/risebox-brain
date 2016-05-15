@@ -89,8 +89,18 @@ Copy deploy keys from the vault :
 - ```brain-prod.key``` & ```brain-prod.pub``` for production
 - ```brain-dev.key``` & ```brain-dev.pub``` for development
 into /root/.ssh
+```bash
+scp ~/Downloads/brain-dev.key root@risebox-goldstein.local:/root/.ssh
+scp ~/Downloads/brain-prod.key root@risebox-goldstein.local:/root/.ssh
+scp ~/Downloads/brain-dev.pub root@risebox-goldstein.local:/root/.ssh
+scp ~/Downloads/brain-prod.pub root@risebox-goldstein.local:/root/.ssh
+```
 
 - Rename private key as ```id_rsa``` and public key as ```id_rsa.pub```
+```bash
+cp brain-dev.key id_rsa
+cp brain-dev.pub id_rsa.pub
+```
 
 also set correct execution rights:
 ```chmod 700 id_rsa```
@@ -98,7 +108,7 @@ also set correct execution rights:
 ```
 cd /home/risebox
 git clone git@github.com:risebox/risebox-brain.git
-./lib/install_dependencies.sh 
+./lib/install-dependencies.sh 
 npm install
 ```
 
@@ -106,7 +116,7 @@ npm install
 
 5. Install temperature probe DS18B20
 
-This is now part of install_dependencies.sh script
+This is now part of install-dependencies.sh script
 
 Check with __dmesg__ et that loading is correct
 
