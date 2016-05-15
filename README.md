@@ -111,6 +111,11 @@ git clone git@github.com:risebox/risebox-brain.git
 ./lib/install-dependencies.sh 
 npm install
 ```
+if the following error comes up 
+```
+../node_modules/nan/nan.h:330:47: error: 'REPLACE_INVALID_UTF8' is not a member of 'v8::String'
+```
+you should upgrade to latest version of npm see [here](https://github.com/lovell/sharp/issues/421)
 
 - Copy __.env.example__ to __.env__ file and adapt with the box config
 
